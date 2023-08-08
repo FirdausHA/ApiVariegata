@@ -3,42 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Hama;
+use App\Models\Stage;
 
-
-class HamaController extends Controller
+class StageController extends Controller
 {
     public function index()
     {
-        $hamas = Hama::all();
-        return response()->json($hamas);
+        $stages = Stage::all();
+        return response()->json($stages);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'tipe' => 'required|string',
-            'description' => 'required|string',
-            'cegah' => 'required|string',
+            'subtitle' => 'required|string',
+            'color' => 'required|string',
             'plant_id' => 'required|exists:plants,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $hama = new Hama();
-            $hama->name = $request->input('name');
-            $hama->tipe = $request->input('tipe');
-            $hama->description = $request->input('description');
-            $hama->cegah = $request->input('cegah');
-            $hama->plant_id = $request->input('plant_id');
+            $stage = new Stage();
+            $stage->name = $request->input('name');
+            $stage->subtitle = $request->input('subtitle');
+            $stage->color = $request->input('color');
+            $stage->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $hama->image = $imagePath;
+                $stage->image = $imagePath;
             }
 
-            $hama->save();
+            $stage->save();
             return response()->json(['message' => 'Product created successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create product'], 500);
@@ -47,13 +44,13 @@ class HamaController extends Controller
 
     public function show($id)
     {
-        $hama = Hama::findOrFail($id);
-        return response()->json($hama);
+        $stage = Stage::findOrFail($id);
+        return response()->json($stage);
     }
 
     public function getByCategory($plant_id)
     {
-        $hamas = Hama::where('plant_id', $plant_id)->get();
+        $hamas = Stage::where('plant', $plant_id)->get();
         return response()->json($hamas);
     }
 
@@ -61,20 +58,18 @@ class HamaController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'tipe' => 'required|string',
-            'description' => 'required|string',
-            'cegah' => 'required|string',
+            'subtitle' => 'required|string',
+            'color' => 'required|string',
             'plant_id' => 'required|exists:plants,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $hama = Hama::findOrFail($id);
-            $hama->name = $request->input('name');
-            $hama->tipe = $request->input('tipe');
-            $hama->description = $request->input('description');
-            $hama->cegah = $request->input('cegah');
-            $hama->plant_id = $request->input('plant_id');
+            $stage = Stage::findOrFail($id);
+            $stage->name = $request->input('name');
+            $stage->subtitle = $request->input('subtitle');
+            $stage->color = $request->input('color');
+            $stage->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
@@ -83,10 +78,10 @@ class HamaController extends Controller
                 // }
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $hama->image = $imagePath;
+                $stage->image = $imagePath;
             }
 
-            $hama->save();
+            $stage->save();
             return response()->json(['message' => 'Product updated successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update product'], 500);
@@ -95,8 +90,8 @@ class HamaController extends Controller
 
     public function destroy($id)
     {
-        $hama = Hama::findOrFail($id);
-        $hama->delete();
+        $stage = Stage::findOrFail($id);
+        $stage->delete();
         return response()->json(null, 204);
     }
 }

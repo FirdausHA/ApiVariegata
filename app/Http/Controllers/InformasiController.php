@@ -10,32 +10,75 @@ class InformasiController extends Controller
     public function index()
     {
         $informasis = Informasi::all();
-        return response()->json(['massage' => 'Succes','data' => $informasis]);
-    }
-
-    public function show($id)
-    {
-        $informasi = Informasi::find($id);
-        return response()->json(['massage' => 'Succes','data' => $informasi]);
+        return response()->json($informasis);
     }
 
     public function store(Request $request)
     {
-        $informasi = Informasi::create($request->all());
-        return response()->json(['massage' => 'Succes','data' => $informasi]);
+        $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $informasi = new Informasi();
+            $informasi->name = $request->input('name');
+            $informasi->description = $request->input('description');
+
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('product_images', 'public');
+                $informasi->image = $imagePath;
+            }
+
+            $informasi->save();
+            return response()->json(['message' => 'Product created successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create product'], 500);
+        }
     }
+
+    public function show($id)
+    {
+        $informasi = Informasi::findOrFail($id);
+        return response()->json($informasi);
+    }
+
 
     public function update(Request $request, $id)
     {
-        $informasi = Informasi::find($id);
-        $informasi->update($request->all());
-        return response()->json(['massage' => 'Succes','data' => $informasi]);
+        $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $informasi = Informasi::findOrFail($id);
+            $informasi->name = $request->input('name');
+            $informasi->description = $request->input('description');
+
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                // if ($product->image) {
+                //     Storage::disk('public')->delete($product->image);
+                // }
+
+                $imagePath = $request->file('image')->store('product_images', 'public');
+                $informasi->image = $imagePath;
+            }
+
+            $informasi->save();
+            return response()->json(['message' => 'Product updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update product'], 500);
+        }
     }
 
     public function destroy($id)
     {
-        $informasi = Informasi::find($id);
+        $informasi = Informasi::findOrFail($id);
         $informasi->delete();
-        return response()->json(['massage' => 'Succes','data' => null]);
+        return response()->json(null, 204);
     }
 }

@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Content extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name', 'week', 'image', 'title', 'description', 'stage_id'];
+
+    public function stages()
+    {
+        return $this->belongsTo(Stage::class);
+    }
 }

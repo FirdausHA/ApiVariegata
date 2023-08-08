@@ -9,6 +9,7 @@ use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\HamaController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlantStageController;
+use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 
 
@@ -56,12 +57,23 @@ Route::post('/products', [ProductController::class, 'store']);
 Route::put('products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
-
 Route::get('/hamas', [HamaController::class,'index']);
 Route::post('/hamas', [HamaController::class,'store']);
 Route::get('hamas/{id}', [HamaController::class,'show']);
 Route::put('/hamas/{id}', [HamaController::class,'update']);
 Route::delete('/hamas/{id}', [HamaController::class,'destroy']);
+
+Route::get('/stages', [StageController::class,'index']);
+Route::post('/stages', [StageController::class,'store']);
+Route::get('stages/{id}', [StageController::class,'show']);
+Route::put('/stages/{id}', [StageController::class,'update']);
+Route::delete('/stages/{id}', [StageController::class,'destroy']);
+
+Route::get('/contents', [ContentController::class,'index']);
+Route::post('/contents', [ContentController::class,'store']);
+Route::get('contents/{id}', [ContentController::class,'show']);
+Route::put('/contents/{id}', [ContentController::class,'update']);
+Route::delete('/contents/{id}', [ContentController::class,'destroy']);
 
 Route::get('/informasis', [InformasiController::class,'index']);
 Route::post('/informasis', [InformasiController::class,'store']);

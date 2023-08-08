@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('week')->nullable();
             $table->string('title')->nullable();
-            $table->string('subtitle')->nullable();
-            $table->string('description', 10000)->nullable();
-            $table->unsignedBigInteger('plant_stage_id');
+            $table->string('description')->nullable();
             $table->string('image')->nullable();
+            $table->unsignedBigInteger('stage_id');
             $table->timestamps();
 
-            $table->foreign('plant_stage_id')->references('id')->on('plant_stages')->onDelete('cascade');
+            $table->foreign('stage_id')->references('id')->on('stages');
         });
     }
 

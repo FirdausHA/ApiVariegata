@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('informasis', function (Blueprint $table) {
+        Schema::create('stages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('subtitle');
             $table->string('image');
-            $table->string('description', 10000);
+            $table->string('color');
+            $table->unsignedBigInteger('plant_id');
             $table->timestamps();
+            $table->foreign('plant_id')->references('id')->on('plants');
         });
     }
 
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('informasis');
+        Schema::dropIfExists('stages');
     }
 };
