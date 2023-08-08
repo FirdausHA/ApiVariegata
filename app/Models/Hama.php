@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Hama extends Model
 {
-    use HasFactory;
-    protected $guarded =['id'];
+    protected $fillable = ['name', 'tipe', 'image', 'description', 'cegah', 'plant_id'];
+
+    public function plants()
+    {
+        return $this->belongsTo(Plant::class);
+    }
 }

@@ -7,6 +7,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\HamaController;
+use App\Http\Controllers\PlantController;
+use App\Http\Controllers\PlantStageController;
+use App\Http\Controllers\ContentController;
 
 
 /*
@@ -26,6 +29,19 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('plants', [PlantController::class, 'index']);
+Route::post('plants', [PlantController::class, 'store']);
+Route::get('/plants/{id}', [PlantController::class, 'show']);
+Route::put('/plants/{id}', [PlantController::class, 'update']);
+Route::delete('/plants/{id}', [PlantController::class, 'destroy']);
+
+Route::get('/plants_stages/plants/{plant_id}', [PlantStageController::class, 'getbyPlant']);
+Route::get('/plant_stages', [PlantStageController::class, 'index']);
+Route::post('/plant_stages', [PlantStageController::class, 'store']);
+Route::get('/plant_stages/{id}', [PlantStageController::class, 'show']);
+Route::put('/plant_stages/{id}', [PlantStageController::class, 'update']);
+Route::delete('/plant_stages/{id}', [PlantStageController::class, 'destroy']);
 
 Route::get('categories', [CategoryController::class, 'index']);
 Route::get('categories/{id}', [CategoryController::class, 'show']);
