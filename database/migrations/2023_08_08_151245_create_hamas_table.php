@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('cegah',10000);
             $table->unsignedBigInteger('plant_id');
             $table->timestamps();
-            
+
             $table->foreign('plant_id')->references('id')->on('plants');
         });
     }
