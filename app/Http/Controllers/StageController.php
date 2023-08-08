@@ -50,7 +50,7 @@ class StageController extends Controller
 
     public function getByCategory($plant_id)
     {
-        $hamas = Stage::where('plant', $plant_id)->get();
+        $hamas = Stage::where('plant_id', $plant_id)->get();
         return response()->json($hamas);
     }
 
