@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('week')->nullable();
             $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->string('description', 10000)->nullable();
             $table->string('image')->nullable();
             $table->unsignedBigInteger('stage_id');
             $table->timestamps();
