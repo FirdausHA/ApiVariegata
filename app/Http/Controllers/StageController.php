@@ -3,39 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\Stage;
 
-class ProductController extends Controller
+class StageController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-        return response()->json($products);
+        $stages = Stage::all();
+        return response()->json($stages);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'subtitle' => 'required|string',
+            'color' => 'required|string',
+            'plant_id' => 'required|exists:plants,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $product = new Product();
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->category_id = $request->input('category_id');
+            $stage = new Stage();
+            $stage->name = $request->input('name');
+            $stage->subtitle = $request->input('subtitle');
+            $stage->color = $request->input('color');
+            $stage->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $product->image = $imagePath;
+                $stage->image = $imagePath;
             }
 
-            $product->save();
+            $stage->save();
             return response()->json(['message' => 'Product created successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create product'], 500);
@@ -44,32 +44,32 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        return response()->json($product);
+        $stage = Stage::findOrFail($id);
+        return response()->json($stage);
     }
 
-    public function getByCategory($category_id)
+    public function getByCategory($plant_id)
     {
-        $products = Product::where('category_id', $category_id)->get();
-        return response()->json($products);
+        $hamas = Stage::where('plant', $plant_id)->get();
+        return response()->json($hamas);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'subtitle' => 'required|string',
+            'color' => 'required|string',
+            'plant_id' => 'required|exists:plants,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $product = Product::findOrFail($id);
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->category_id = $request->input('category_id');
+            $stage = Stage::findOrFail($id);
+            $stage->name = $request->input('name');
+            $stage->subtitle = $request->input('subtitle');
+            $stage->color = $request->input('color');
+            $stage->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
@@ -78,10 +78,10 @@ class ProductController extends Controller
                 // }
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $product->image = $imagePath;
+                $stage->image = $imagePath;
             }
 
-            $product->save();
+            $stage->save();
             return response()->json(['message' => 'Product updated successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update product'], 500);
@@ -90,8 +90,8 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
-        $product->delete();
+        $stage = Stage::findOrFail($id);
+        $stage->delete();
         return response()->json(null, 204);
     }
 }

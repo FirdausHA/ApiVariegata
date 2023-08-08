@@ -3,39 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\Plant;
 
-class ProductController extends Controller
+class PlantController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-        return response()->json($products);
+        $plants = Plant::all();
+        return response()->json($plants);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'scientific' => 'required|string',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_bg' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $product = new Product();
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->category_id = $request->input('category_id');
+            $plant = new Plant();
+            $plant->name = $request->input('name');
+            $plant->scientific = $request->input('scientific');
 
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $product->image = $imagePath;
+                $plant->image = $imagePath;
+            }
+            if ($request->hasFile('image_bg')) {
+                $imagePath = $request->file('image_bg')->store('product_images', 'public');
+                $plant->image_bg = $imagePath;
             }
 
-            $product->save();
+            $plant->save();
             return response()->json(['message' => 'Product created successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create product'], 500);
@@ -44,32 +45,24 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        return response()->json($product);
+        $plant = Plant::findOrFail($id);
+        return response()->json($plant);
     }
 
-    public function getByCategory($category_id)
-    {
-        $products = Product::where('category_id', $category_id)->get();
-        return response()->json($products);
-    }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
+            'scientific' => 'nullable|string',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_bg' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
-            $product = Product::findOrFail($id);
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->category_id = $request->input('category_id');
+            $plant = Plant::findOrFail($id);
+            $plant->name = $request->input('name');
+            $plant->description = $request->input('scientific');
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
@@ -78,10 +71,11 @@ class ProductController extends Controller
                 // }
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $product->image = $imagePath;
+                $imagePath = $request->file('image_bg')->store('product_images', 'public');
+                $plant->image = $imagePath;
             }
 
-            $product->save();
+            $plant->save();
             return response()->json(['message' => 'Product updated successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update product'], 500);
@@ -90,7 +84,7 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Plant::findOrFail($id);
         $product->delete();
         return response()->json(null, 204);
     }

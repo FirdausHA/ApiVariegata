@@ -17,12 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('tipe');
-            $table->string('image_url');
-            $table->string('description');
-            $table->string('gejala');
-            $table->string('lanjut');
-            $table->string('cegah', 10000);
+            $table->string('image');
+            $table->string('description',1000);
+            $table->string('cegah',10000);
+            $table->unsignedBigInteger('plant_id');
             $table->timestamps();
+            
+            $table->foreign('plant_id')->references('id')->on('plants');
         });
     }
 
