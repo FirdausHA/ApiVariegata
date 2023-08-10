@@ -62,7 +62,7 @@ class PlantController extends Controller
         try {
             $plant = Plant::findOrFail($id);
             $plant->name = $request->input('name');
-            $plant->description = $request->input('scientific');
+            $plant->scientific = $request->input('scientific');
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada (jika diperlukan)
