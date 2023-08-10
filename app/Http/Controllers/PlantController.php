@@ -65,20 +65,25 @@ class PlantController extends Controller
             $plant->description = $request->input('scientific');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                // if ($product->image) {
-                //     Storage::disk('public')->delete($product->image);
-                // }
+                // Hapus gambar lama jika ada (jika diperlukan)
+                // Storage::disk('public')->delete($plant->image);
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
-                $imagePath = $request->file('image_bg')->store('product_images', 'public');
                 $plant->image = $imagePath;
             }
 
+            if ($request->hasFile('image_bg')) {
+                // Hapus gambar lama background jika ada (jika diperlukan)
+                // Storage::disk('public')->delete($plant->image_bg);
+
+                $imageBgPath = $request->file('image_bg')->store('product_images', 'public');
+                $plant->image_bg = $imageBgPath;
+            }
+
             $plant->save();
-            return response()->json(['message' => 'Product updated successfully']);
+            return response()->json(['message' => 'Plant updated successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product'], 500);
+            return response()->json(['error' => 'Failed to update plant'], 500);
         }
     }
 
