@@ -37,6 +37,6 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
             ];
-        });
+        });  
     }
 }
