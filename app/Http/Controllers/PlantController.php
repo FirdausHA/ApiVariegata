@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Plant;
 
 class PlantController extends Controller
@@ -66,7 +67,9 @@ class PlantController extends Controller
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada (jika diperlukan)
-                // Storage::disk('public')->delete($plant->image);
+                if ($plant->image) {
+                    Storage::disk('public')->delete($plant->image);
+                }
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
                 $plant->image = $imagePath;
@@ -74,11 +77,14 @@ class PlantController extends Controller
 
             if ($request->hasFile('image_bg')) {
                 // Hapus gambar lama background jika ada (jika diperlukan)
-                // Storage::disk('public')->delete($plant->image_bg);
+                if ($plant->image_bg) {
+                    Storage::disk('public')->delete($plant->image_bg);
+                }
 
                 $imageBgPath = $request->file('image_bg')->store('product_images', 'public');
                 $plant->image_bg = $imageBgPath;
             }
+
 
             $plant->save();
             return response()->json(['message' => 'Plant updated successfully']);
