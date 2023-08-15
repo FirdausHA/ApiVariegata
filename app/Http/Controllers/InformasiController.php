@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Informasi;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\Informasi;
+
 
 class InformasiController extends Controller
 {
@@ -27,14 +30,14 @@ class InformasiController extends Controller
             $informasi->description = $request->input('description');
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('informasi_images', 'public');
                 $informasi->image = $imagePath;
             }
 
             $informasi->save();
-            return response()->json(['message' => 'Product created successfully']);
+            return response()->json(['message' => 'Informasi created successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create product'], 500);
+            return response()->json(['error' => 'Failed to create informasi'], 500);
         }
     }
 
@@ -59,19 +62,18 @@ class InformasiController extends Controller
             $informasi->description = $request->input('description');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                // if ($product->image) {
-                //     Storage::disk('public')->delete($product->image);
-                // }
+                Storage::disk('public')->delete($informasi->image);
 
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('informasi_images', 'public');
                 $informasi->image = $imagePath;
+
+                Log::info('New image uploaded: ' . $imagePath);
             }
 
             $informasi->save();
-            return response()->json(['message' => 'Product updated successfully']);
+            return response()->json(['message' => 'Informasi updated successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product'], 500);
+            return response()->json(['error' => 'Failed to update informasi'], 500);
         }
     }
 

@@ -35,14 +35,14 @@ class HamaController extends Controller
             $hama->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('hama_images', 'public');
                 $hama->image = $imagePath;
             }
 
             $hama->save();
-            return response()->json(['message' => 'Product created successfully']);
+            return response()->json(['message' => 'Hama created successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create product'], 500);
+            return response()->json(['error' => 'Failed to create Hama'], 500);
         }
     }
 
@@ -83,14 +83,14 @@ class HamaController extends Controller
                     Storage::disk('public')->delete($hama->image);
                 }
 
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('hama_images', 'public');
                 $hama->image = $imagePath;
             }
 
             $hama->save();
-            return response()->json(['message' => 'Product updated successfully']);
+            return response()->json(['message' => 'Hama updated successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product'], 500);
+            return response()->json(['error' => 'Failed to update hama'], 500);
         }
     }
 

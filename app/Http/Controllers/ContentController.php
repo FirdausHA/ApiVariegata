@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Content;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ContentController extends Controller
 {
@@ -34,14 +35,14 @@ class ContentController extends Controller
             $content->stage_id = $request->input('stage_id');
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('content_images', 'public');
                 $content->image = $imagePath;
             }
 
             $content->save();
-            return response()->json(['message' => 'Product created successfully']);
+            return response()->json(['message' => 'Content created successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create product'], 500);
+            return response()->json(['error' => 'Failed to create cotent'], 500);
         }
     }
 
@@ -77,19 +78,18 @@ class ContentController extends Controller
             $content->stage_id = $request->input('stage_id');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                if ($content->image) {
-                    Storage::disk('public')->delete($content->image);
-                }
+                Storage::disk('public')->delete($content->image);
 
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('content_images', 'public');
                 $content->image = $imagePath;
+
+                Log::info('New image uploaded: ' . $imagePath);
             }
 
             $content->save();
-            return response()->json(['message' => 'Product updated successfully']);
+            return response()->json(['message' => 'Content updated successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product'], 500);
+            return response()->json(['error' => 'Failed to update content'], 500);
         }
     }
 
