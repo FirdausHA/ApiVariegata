@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plant extends Model
 {
-    protected $fillable = ['name', 'scientific', 'image_bg', 'image'];
+    protected $fillable = ['name', 'scientific', 'image', 'image_bg'];
 
-    public function plant_stages()
+    public function banners()
     {
-        return $this->hasMany(PlantStage::class);
+        return $this->hasMany(Banner::class);
     }
 
     public function hamas()
