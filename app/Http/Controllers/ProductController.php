@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -72,13 +74,12 @@ class ProductController extends Controller
             $product->category_id = $request->input('category_id');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                // if ($product->image) {
-                //     Storage::disk('public')->delete($product->image);
-                // }
+                Storage::disk('public')->delete($product->image);
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
                 $product->image = $imagePath;
+
+                Log::info('New image uploaded: ' . $imagePath);
             }
 
             $product->save();

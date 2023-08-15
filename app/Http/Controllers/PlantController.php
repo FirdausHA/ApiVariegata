@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log; //
+use Illuminate\Support\Facades\Log;
 use App\Models\Plant;
 
 class PlantController extends Controller
@@ -30,18 +30,18 @@ class PlantController extends Controller
             $plant->scientific = $request->input('scientific');
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('plant_images', 'public');
                 $plant->image = $imagePath;
             }
             if ($request->hasFile('image_bg')) {
-                $imagePath = $request->file('image_bg')->store('product_images', 'public');
-                $plant->image_bg = $imagePath;
+                $imageBgPath = $request->file('image_bg')->store('plant_images', 'public');
+                $plant->image_bg = $imageBgPath;
             }
 
             $plant->save();
-            return response()->json(['message' => 'Product created successfully']);
+            return response()->json(['message' => 'Plant created successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create product'], 500);
+            return response()->json(['error' => 'Failed to create plant'], 500);
         }
     }
 
@@ -55,7 +55,7 @@ class PlantController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'scientific' => 'nullable|string',
+            'scientific' => 'required|string',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'image_bg' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -66,42 +66,35 @@ class PlantController extends Controller
             $plant->scientific = $request->input('scientific');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada (jika diperlukan)
                 Storage::disk('public')->delete($plant->image);
 
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('plant_images', 'public');
                 $plant->image = $imagePath;
 
-                // Tambahkan pernyataan log
                 Log::info('New image uploaded: ' . $imagePath);
             }
 
             if ($request->hasFile('image_bg')) {
-                // Hapus gambar lama background jika ada (jika diperlukan)
                 Storage::disk('public')->delete($plant->image_bg);
 
-                $imageBgPath = $request->file('image_bg')->store('product_images', 'public');
+                $imageBgPath = $request->file('image_bg')->store('plant_images', 'public');
                 $plant->image_bg = $imageBgPath;
 
-                // Tambahkan pernyataan log
                 Log::info('New background image uploaded: ' . $imageBgPath);
             }
 
             $plant->save();
             return response()->json(['message' => 'Plant updated successfully']);
         } catch (\Exception $e) {
-            // Tambahkan pernyataan log untuk kesalahan
             Log::error('Failed to update plant: ' . $e->getMessage());
-
             return response()->json(['error' => 'Failed to update plant'], 500);
         }
     }
 
-
     public function destroy($id)
     {
-        $product = Plant::findOrFail($id);
-        $product->delete();
+        $plant = Plant::findOrFail($id);
+        $plant->delete();
         return response()->json(null, 204);
     }
 }

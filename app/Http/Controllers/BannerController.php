@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class BannerController extends Controller
 {
@@ -32,14 +33,14 @@ class BannerController extends Controller
             $banner->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('banner_images', 'public');
                 $banner->image = $imagePath;
             }
 
             $banner->save();
-            return response()->json(['message' => 'Product created successfully']);
+            return response()->json(['message' => 'Banner created successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create product'], 500);
+            return response()->json(['error' => 'Failed to create banner'], 500);
         }
     }
 
@@ -73,19 +74,18 @@ class BannerController extends Controller
             $banner->plant_id = $request->input('plant_id');
 
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                if ($banner->image) {
-                    Storage::disk('public')->delete($banner->image);
-                }
+                Storage::disk('public')->delete($banner->image);
 
-                $imagePath = $request->file('image')->store('product_images', 'public');
+                $imagePath = $request->file('image')->store('banner_images', 'public');
                 $banner->image = $imagePath;
+
+                Log::info('New image uploaded: ' . $imagePath);
             }
 
             $banner->save();
-            return response()->json(['message' => 'Product updated successfully']);
+            return response()->json(['message' => 'Banner updated successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product'], 500);
+            return response()->json(['error' => 'Failed to update banner'], 500);
         }
     }
 
