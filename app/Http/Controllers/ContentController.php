@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Content;
+use Illuminate\Support\Facades\Storage;
 
 class ContentController extends Controller
 {
@@ -77,9 +78,9 @@ class ContentController extends Controller
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
-                // if ($product->image) {
-                //     Storage::disk('public')->delete($product->image);
-                // }
+                if ($content->image) {
+                    Storage::disk('public')->delete($content->image);
+                }
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
                 $content->image = $imagePath;

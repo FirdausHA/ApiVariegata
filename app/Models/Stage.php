@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stage extends Model
 {
-    protected $fillable = ['name', 'subtitle', 'image', 'color','plant_id'];
+    use HasFactory;
 
-    public function plants()
+    protected $fillable = ['name','banner_id'];
+
+    public function banners()
     {
-        return $this->belongsTo(Plant::class);
+        return $this->belongsTo(Banner::class);
+    }
+
+    public function contents()
+    {
+        return $this->hasMany(Content::class);
     }
 }

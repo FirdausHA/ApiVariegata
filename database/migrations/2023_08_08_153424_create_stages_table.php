@@ -15,13 +15,9 @@ return new class extends Migration
     {
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('subtitle');
-            $table->string('image');
-            $table->string('color');
-            $table->unsignedBigInteger('plant_id');
+            $table->string('name')->nullable();
+            $table->foreignId('banner_id');
             $table->timestamps();
-            $table->foreign('plant_id')->references('id')->on('plants');
         });
     }
 

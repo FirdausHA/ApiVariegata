@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log; //
 use App\Models\Plant;
 
 class PlantController extends Controller
@@ -50,7 +51,6 @@ class PlantController extends Controller
         return response()->json($plant);
     }
 
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -67,31 +67,36 @@ class PlantController extends Controller
 
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada (jika diperlukan)
-                if ($plant->image) {
-                    Storage::disk('public')->delete($plant->image);
-                }
+                Storage::disk('public')->delete($plant->image);
 
                 $imagePath = $request->file('image')->store('product_images', 'public');
                 $plant->image = $imagePath;
+
+                // Tambahkan pernyataan log
+                Log::info('New image uploaded: ' . $imagePath);
             }
 
             if ($request->hasFile('image_bg')) {
                 // Hapus gambar lama background jika ada (jika diperlukan)
-                if ($plant->image_bg) {
-                    Storage::disk('public')->delete($plant->image_bg);
-                }
+                Storage::disk('public')->delete($plant->image_bg);
 
                 $imageBgPath = $request->file('image_bg')->store('product_images', 'public');
                 $plant->image_bg = $imageBgPath;
-            }
 
+                // Tambahkan pernyataan log
+                Log::info('New background image uploaded: ' . $imageBgPath);
+            }
 
             $plant->save();
             return response()->json(['message' => 'Plant updated successfully']);
         } catch (\Exception $e) {
+            // Tambahkan pernyataan log untuk kesalahan
+            Log::error('Failed to update plant: ' . $e->getMessage());
+
             return response()->json(['error' => 'Failed to update plant'], 500);
         }
     }
+
 
     public function destroy($id)
     {
