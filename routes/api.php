@@ -12,6 +12,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\TransactionController;
 
 
 /*
@@ -31,6 +32,9 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/request-payment', [TransactionController::class, 'requestPayment']);
+Route::post('/payment-callback', [TransactionController::class, 'paymentCallback']);
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
