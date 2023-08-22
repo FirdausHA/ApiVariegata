@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique();
+            $table->decimal('total_amount', 10, 2);
+            $table->enum('status', ['Unpaid', 'paid'])->default('Unpaid');
             $table->timestamps();
         });
     }
