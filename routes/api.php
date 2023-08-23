@@ -26,6 +26,7 @@ use App\Http\Controllers\TransactionController;
 |
 */
 
+Route::get('/users', [AuthController::class, 'getAllUsers']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 

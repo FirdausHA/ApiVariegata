@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Midtrans\Snap;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
 use Midtrans\Notification;
 
@@ -13,17 +14,16 @@ class TransactionController extends Controller
 {
     public function requestPayment(Request $request)
     {
+        $user = Auth::user();
+
         $request->validate([
-            'order_number' => 'required',
             'total_amount' => 'required|numeric|min:1',
-            'first_name' => 'required',
-            'email' => 'required|email',
         ]);
 
         try {
             // Create order
             $order = Order::create([
-                'order_number' => $request->order_number,
+                'order_number' => $this->generateOrderNumber(), // Generate unique order number
                 'total_amount' => $request->total_amount,
             ]);
 
@@ -37,11 +37,11 @@ class TransactionController extends Controller
             $params = [
                 'transaction_details' => [
                     'order_id' => $order->order_number,
-                    'gross_amount' => $order->total_amount,
+                    'gross_amount' => request('total_amount'),
                 ],
                 'customer_details' => [
-                    'first_name' => $request->name,
-                    'email' => $request->email,
+                    'first_name' => $user->name, // Use user's name
+                    'email' => $user->email,    // Use user's email
                 ],
             ];
 
@@ -51,6 +51,15 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to create order'], 500);
         }
+    }
+
+    // Rest of the controller methods...
+
+    // Generate unique order number
+    private function generateOrderNumber() {
+        $lastOrder = Order::orderBy('id', 'desc')->first();
+        $orderNumber = $lastOrder ? $lastOrder->id + 1 : 1;
+        return 'ORDER-' . str_pad($orderNumber, 5, '0', STR_PAD_LEFT);
     }
 
     public function paymentCallback(Request $request)

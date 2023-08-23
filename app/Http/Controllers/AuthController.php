@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function getAllUsers()
+    {
+        // Retrieve all users from the database
+        $users = User::all();
+
+        // Return the users' data
+        return response()->json($users, 200);
+    }
+
     public function register(Request $req)
     {
         // Validate
