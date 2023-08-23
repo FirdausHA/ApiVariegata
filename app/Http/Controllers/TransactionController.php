@@ -14,21 +14,19 @@ class TransactionController extends Controller
 {
     public function requestPayment(Request $request)
     {
-        $user = Auth::user();
 
         $request->validate([
-            'total_amount' => 'required|numeric|min:1',
+            'total_amount' => 'required|numeric',
         ]);
 
-        try {
+        // try {
             // Create order
             $order = Order::create([
-                'order_number' => $this->generateOrderNumber(), // Generate unique order number
-                'total_amount' => $request->total_amount,
+                'total_amount' => request('total_amount'),
             ]);
 
             // Midtrans configuration
-            Config::$serverKey = config('services.midtrans.server_key');
+            Config::$serverKey = "SB-Mid-server-NIduoNcz-aZq3WjE8BXL3eBY";
             Config::$isProduction = config('services.midtrans.is_production');
             Config::$isSanitized = true;
             Config::$is3ds = true;
@@ -36,30 +34,18 @@ class TransactionController extends Controller
             // Create payment request to Midtrans
             $params = [
                 'transaction_details' => [
-                    'order_id' => $order->order_number,
-                    'gross_amount' => request('total_amount'),
+                    'order_id' => $order->id,
+                    'gross_amount' => $order->total_amount,
                 ],
                 'customer_details' => [
-                    'first_name' => $user->name, // Use user's name
-                    'email' => $user->email,    // Use user's email
+                    'first_name' => "user",
+                    'email' => 'user1@gmail.com',
                 ],
             ];
 
             $snapToken = Snap::getSnapToken($params);
 
-            return response()->json(['snap_token' => $snapToken]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create order'], 500);
-        }
-    }
-
-    // Rest of the controller methods...
-
-    // Generate unique order number
-    private function generateOrderNumber() {
-        $lastOrder = Order::orderBy('id', 'desc')->first();
-        $orderNumber = $lastOrder ? $lastOrder->id + 1 : 1;
-        return 'ORDER-' . str_pad($orderNumber, 5, '0', STR_PAD_LEFT);
+            return response()->json(['snap_token' => $snapToken, 'client_key' => "SB-Mid-client-XsUvkW0DyXiyhOcl"]);
     }
 
     public function paymentCallback(Request $request)
