@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['order_number', 'total_amount', 'status'];
+    protected $fillable = [ 'total_amount', 'status'];
 
     public function cartItems()
     {
