@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InformasiController;
@@ -33,6 +34,14 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::get('/addresses', [AddressController::class, 'index']);
+Route::post('/addresses', [AddressController::class, 'store']);
+Route::put('/addresses/{id}', [AddressController::class, 'update']);
+Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
+
 
 Route::post('/request-payment', [TransactionController::class, 'requestPayment']);
 Route::post('/payment-callback', [TransactionController::class, 'paymentCallback']);

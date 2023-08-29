@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('alamat');
+            $table->string('nomor_telepon');
+            $table->string('email')->unique();
+            $table->text('catatan_driver')->nullable();
             $table->timestamps();
         });
     }
