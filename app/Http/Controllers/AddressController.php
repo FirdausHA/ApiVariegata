@@ -28,7 +28,7 @@ class AddressController extends Controller
         return response()->json([
             'message' => 'Address created successfully',
             'address' => $address
-        ], 201);
+        ], 200);
     }
 
     public function update(Request $request, $id)
