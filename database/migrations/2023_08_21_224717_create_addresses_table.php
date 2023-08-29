@@ -15,15 +15,12 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('address');
-            $table->string('receiver_name');
-            $table->string('receiver_phone');
-            $table->string('email');
-            $table->text('driver_note')->nullable();
+            $table->string('nama');
+            $table->string('alamat');
+            $table->string('nomor_telepon');
+            $table->string('email')->unique();
+            $table->text('catatan_driver')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
