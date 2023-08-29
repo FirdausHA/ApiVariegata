@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('alamat');
-            $table->integer('nomor_telepon');
+            $table->string('nomor_telepon');
             $table->string('email')->unique();
             $table->text('catatan_driver');
             $table->timestamps();
