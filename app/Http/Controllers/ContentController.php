@@ -52,7 +52,7 @@ class ContentController extends Controller
         return response()->json($content);
     }
 
-    public function getByCategory($stage_id)
+    public function getbyStage($stage_id)
     {
         $contents = Content::where('stage_id', $stage_id)->get();
         return response()->json($contents);

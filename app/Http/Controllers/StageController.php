@@ -38,7 +38,7 @@ class StageController extends Controller
         return response()->json($stage);
     }
 
-    public function getByCategory($banner_id)
+    public function getByBanner($banner_id)
     {
         $stages = Stage::where('banner_id', $banner_id)->get();
         return response()->json($stages);

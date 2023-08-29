@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InformasiController;
@@ -32,6 +33,13 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user_addresses', [UserController::class, 'index'])->name('user_addresses.index');
+    Route::post('/user_addresses', [UserController::class, 'store'])->name('user_addresses.store');
+    Route::put('/user_addresses/{id}', [UserController::class, 'update'])->name('user_addresses.update');
+    Route::delete('/user_addresses/{id}', [UserController::class, 'destroy'])->name('user_addresses.destroy');
 });
 
 Route::post('/request-payment', [TransactionController::class, 'requestPayment']);
