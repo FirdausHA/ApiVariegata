@@ -44,10 +44,7 @@ class AddressController extends Controller
             'nama' => 'string',
             'alamat' => 'string',
             'nomor_telepon' => 'string',
-            'email' => 'email|unique:addresses,email,' . $address->id,
             'catatan_driver' => 'nullable|string',
-            'longitude' => 'numeric',
-            'latitude' => 'numeric',
         ]);
 
         $address->update($data);
