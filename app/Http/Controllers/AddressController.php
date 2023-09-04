@@ -21,6 +21,8 @@ class AddressController extends Controller
             'nomor_telepon' => 'required|string',
             'email' => 'required|email|unique:addresses',
             'catatan_driver' => 'nullable|string',
+            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric',
         ]);
 
         $address = Address::create($data);
@@ -28,7 +30,7 @@ class AddressController extends Controller
         return response()->json([
             'message' => 'Address created successfully',
             'address' => $address
-        ], 200);
+        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -45,6 +47,8 @@ class AddressController extends Controller
             'nomor_telepon' => 'string',
             'email' => 'email|unique:addresses,email,' . $address->id,
             'catatan_driver' => 'nullable|string',
+            'longitude' => 'numeric',
+            'latitude' => 'numeric',
         ]);
 
         $address->update($data);
