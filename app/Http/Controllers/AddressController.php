@@ -20,8 +20,6 @@ class AddressController extends Controller
             'alamat' => 'required|string',
             'nomor_telepon' => 'required|string',
             'catatan_driver' => 'nullable|string',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
         ]);
 
         $address = Address::create($data);
