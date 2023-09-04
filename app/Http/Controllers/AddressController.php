@@ -16,13 +16,12 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama' => 'required|string',
-            'alamat' => 'required|string',
-            'nomor_telepon' => 'required|string',
-            'email' => 'required|email|unique:addresses',
+            'nama' => 'string',
+            'alamat' => 'string',
+            'nomor_telepon' => 'string',
             'catatan_driver' => 'nullable|string',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
+            'longitude' => 'numeric',
+            'latitude' => 'numeric',
         ]);
 
         $address = Address::create($data);
@@ -45,7 +44,6 @@ class AddressController extends Controller
             'nama' => 'string',
             'alamat' => 'string',
             'nomor_telepon' => 'string',
-            'email' => 'email|unique:addresses,email,' . $address->id,
             'catatan_driver' => 'nullable|string',
             'longitude' => 'numeric',
             'latitude' => 'numeric',
