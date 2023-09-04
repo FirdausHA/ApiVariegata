@@ -14,7 +14,5 @@ class Address extends Model
         'alamat',
         'nomor_telepon',
         'catatan_driver',
-        'longitude',
-        'latitude',
     ];
 }
