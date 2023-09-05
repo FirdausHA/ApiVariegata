@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['Unpaid', 'paid'])->default('Unpaid');
+            $table->unsignedBigInteger('transaction_code');
+            $table->integer('product_id');
+            $table->integer('user_id');
+            $table->bigInteger('alamat_id');
+            $table->enum('status_diulas', ['menunggu diulas', 'sudah diulas'])->default('menunggu diulas');
+            $table->enum('status', ['Menunggu pembayaran', 'Menunggu konfirmasi', 'Sedang disiapkan', 'Menunggu driver', 'Sedang diantar', 'Selesai'])->default('Menunggu pembayaran');
             $table->timestamps();
         });
     }
