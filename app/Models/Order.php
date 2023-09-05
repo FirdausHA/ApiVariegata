@@ -9,10 +9,5 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'total_amount', 'status'];
-
-    public function cartItems()
-    {
-        return $this->hasMany(Cart::class);
-    }
+    protected $guarded = [];
 }

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Midtrans\Snap;
-use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 use Midtrans\Config;
-use Midtrans\Notification;
+use App\Models\order;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class TransactionController extends Controller
 {
