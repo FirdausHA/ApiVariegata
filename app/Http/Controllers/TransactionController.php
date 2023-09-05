@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use Midtrans\Snap;
-use App\Models\Product;
 use Midtrans\Config;
 use App\Models\Order; // Corrected capitalization of "Order" model
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Validator;
-use Midtrans\Notification; 
+use Midtrans\Notification;
 
 class TransactionController extends Controller
 {
