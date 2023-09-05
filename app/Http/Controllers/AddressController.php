@@ -19,7 +19,6 @@ class AddressController extends Controller
             'nama' => 'required|string',
             'alamat' => 'required|string',
             'nomor_telepon' => 'required|string',
-            'email' => 'required|email|unique:addresses',
             'catatan_driver' => 'nullable|string',
         ]);
 
@@ -43,7 +42,6 @@ class AddressController extends Controller
             'nama' => 'string',
             'alamat' => 'string',
             'nomor_telepon' => 'string',
-            'email' => 'email|unique:addresses,email,' . $address->id,
             'catatan_driver' => 'nullable|string',
         ]);
 

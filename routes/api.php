@@ -35,8 +35,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
 Route::get('/addresses', [AddressController::class, 'index']);
 Route::post('/addresses', [AddressController::class, 'store']);
 Route::put('/addresses/{id}', [AddressController::class, 'update']);

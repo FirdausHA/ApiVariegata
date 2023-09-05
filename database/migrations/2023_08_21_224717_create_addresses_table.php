@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('nama');
             $table->string('alamat');
             $table->string('nomor_telepon');
-            $table->string('email')->unique();
             $table->text('catatan_driver')->nullable();
             $table->timestamps();
         });

@@ -16,8 +16,19 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
-        return response()->json($category, 201);
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        try {
+            $category = new Category();
+            $category->name = $request->input('name');
+
+            $category->save();
+            return response()->json(['message' => 'Category berhasil dibuat']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal membuat Category'], 500);
+        }
     }
 
     public function show($id)
@@ -28,9 +39,19 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $category = Category::findOrFail($id);
-        $category->update($request->all());
-        return response()->json($category);
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        try {
+            $category = Category::findOrFail($id);
+            $category->name = $request->input('name');
+
+            $category->save();
+            return response()->json(['message' => 'Category berhasil diperbarui']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal memperbarui Category'], 500);
+        }
     }
 
     public function destroy($id)
