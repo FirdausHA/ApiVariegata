@@ -13,7 +13,7 @@ class CartController extends Controller
         $cartItems = Cart::with('product')->get();
         return response()->json($cartItems);
     }
-    
+
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -23,6 +23,14 @@ class CartController extends Controller
 
         try {
             $product = Product::findOrFail($request->input('product_id'));
+
+            // Periksa apakah produk sudah ada dalam keranjang
+            $existingCartItem = Cart::where('product_id', $product->id)->first();
+
+            if ($existingCartItem) {
+                return response()->json(['message' => 'Product is already in the cart']);
+            }
+
             $cartItem = new Cart([
                 'product_id' => $product->id,
                 'quantity' => $request->input('quantity'),
