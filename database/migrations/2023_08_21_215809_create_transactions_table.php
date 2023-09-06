@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('transaction_code');
+            $table->integer('user_id');
+            $table->string('payment_method');
+            $table->string('transaction_token');
+            $table->string('client_key');
+            $table->enum('status', ['Belum dibayar', 'Sudah dibayar'])->default('Belum dibayar');
             $table->timestamps();
         });
     }
