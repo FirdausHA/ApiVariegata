@@ -9,7 +9,6 @@ use Midtrans\Snap;
 use Midtrans\Config;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -25,7 +24,7 @@ class OrderController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
+            // 'name' => ['required', 'string', 'max:255'],
             'qty' => ['required', 'integer', 'min:1'],
             'total_price' => ['required', 'numeric', 'min:0'],
             'status' => ['required', 'string'],
@@ -41,7 +40,7 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
-            'name' => $request->name,
+            // 'name' => $request->name,
             'qty' => $request->qty,
             'total_price' => $request->total_price,
             'status' => $request->status,
