@@ -42,7 +42,7 @@ Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
-Route::get('/user-transactions', [OrderController::class, 'userTransactions']);
+Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
