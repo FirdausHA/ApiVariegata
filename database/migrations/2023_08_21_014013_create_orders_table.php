@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('addresses_id');
             $table->integer('qty');
             $table->double('total_price', 10, 2);
-            $table->string('status');
+            $table->enum('status', ['Belum Bayar', 'Sudah Bayar']);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
