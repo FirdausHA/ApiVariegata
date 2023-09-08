@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('addresses_id');
             $table->integer('qty');
-            $table->decimal('total_price', 10, 2);
+            $table->double('total_price', 10, 2);
             $table->string('status');
             $table->timestamps();
 
