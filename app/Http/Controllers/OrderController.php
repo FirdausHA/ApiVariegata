@@ -27,7 +27,6 @@ class OrderController extends Controller
             // 'name' => ['required', 'string', 'max:255'],
             'qty' => ['required', 'integer', 'min:1'],
             'total_price' => ['required', 'numeric', 'min:0'],
-            'status' => ['required', 'string'],
             'addresses_id' => ['required', 'integer'],
         ]);
 
@@ -43,7 +42,7 @@ class OrderController extends Controller
             // 'name' => $request->name,
             'qty' => $request->qty,
             'total_price' => $request->total_price,
-            'status' => $request->status,
+            'status' => 'Belum Bayar',
             'addresses_id' => $request->addresses_id,
             'user_id' => $user->id,
             'product_id' => $request->product_id,
