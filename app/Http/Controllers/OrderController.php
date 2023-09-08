@@ -24,7 +24,6 @@ class OrderController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            // 'name' => ['required', 'string', 'max:255'],
             'qty' => ['required', 'integer', 'min:1'],
             'total_price' => ['required', 'numeric', 'min:0'],
             'addresses_id' => ['required', 'integer'],
@@ -39,7 +38,6 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
-            // 'name' => $request->name,
             'qty' => $request->qty,
             'total_price' => $request->total_price,
             'status' => 'Belum Bayar',
@@ -95,11 +93,6 @@ class OrderController extends Controller
                 $order->update(['status' => 'Sudah Bayar']);
             }
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Verifikasi transaksi gagal',
-        ], 400);
     }
 
     public function userTransactions(Request $request)
