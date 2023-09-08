@@ -35,17 +35,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:api')->group(function () {
 Route::get('/addresses', [AddressController::class, 'index']);
 Route::post('/addresses', [AddressController::class, 'store']);
 Route::put('/addresses/{id}', [AddressController::class, 'update']);
 Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
+});
 
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::get('/user-transactions', [OrderController::class, 'userTransactions']);
-
-// Route::post('/request-payment', [TransactionController::class, 'requestPayment']);
-// Route::post('/payment-callback', [TransactionController::class, 'paymentCallback']);
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);

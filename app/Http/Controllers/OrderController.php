@@ -88,10 +88,25 @@ class OrderController extends Controller
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($hashed == $request->signature_key) {
-            if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
-                $order = Order::find($request->order_id);
-                $order->update(['status' => 'Sudah Bayar']);
+            $order = Order::find($request->order_id);
+
+            if ($order) {
+                if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
+                    $order->update(['status' => 'Sudah Bayar']);
+                }
+            } else {
+                // Handle jika pesanan tidak ditemukan
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pesanan tidak ditemukan',
+                ], 404);
             }
+        } else {
+            // Handle jika tanda tangan tidak valid
+            return response()->json([
+                'success' => false,
+                'message' => 'Tanda tangan tidak valid',
+            ], 401);
         }
     }
 
@@ -104,7 +119,16 @@ class OrderController extends Controller
 
         if ($request->has('id')) {
             $order = Order::find($request->id);
-            return view('invoice', compact('order', 'transactions'));
+
+            if ($order) {
+                return view('invoice', compact('order', 'transactions'));
+            } else {
+                // Handle jika pesanan tidak ditemukan
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pesanan tidak ditemukan',
+                ], 404);
+            }
         }
 
         return response()->json([
