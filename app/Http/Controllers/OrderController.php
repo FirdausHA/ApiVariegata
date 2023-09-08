@@ -96,13 +96,28 @@ class OrderController extends Controller
 
     public function userTransactions(Request $request)
     {
+        // Memeriksa apakah pengguna sudah terotentikasi
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not authenticated',
+            ], 401);
+        }
+
         $user = Auth::user();
+
         $transactions = Order::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
         if ($request->has('id')) {
             $order = Order::find($request->id);
+            if (!$order) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found',
+                ], 404);
+            }
             return view('invoice', compact('order', 'transactions'));
         }
 
