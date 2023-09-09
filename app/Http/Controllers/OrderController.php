@@ -82,17 +82,34 @@ class OrderController extends Controller
         }
     }
 
-    public function callback(Request $request)
+    public function callback (Request $request)
     {
         $serverKey = config('midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
-        if ($hashed == $request->signature_key) {
-            if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
-                $order = Order::find($request->order_id);
-                $order->update(['status' => 'Sudah Bayar']);
-            }
+
+        $order = Order::find($request->order_id);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
+
+        if ($hashed !== $request->signature_key) {
+            return response()->json(['success' => false, 'message' => 'Invalid signature'], 400);
+        }
+
+        if ($request->status_code == '200'){
+            $order->update([
+                'status' => 'Sudah Bayar'
+            ]);
+        } else {
+            $order->update([
+                'status' => 'Belum Bayar'
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Callback processed successfully']);
     }
+
 
     public function userTransactions(Request $request)
     {
