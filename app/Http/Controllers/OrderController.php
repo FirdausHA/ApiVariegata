@@ -82,23 +82,28 @@ class OrderController extends Controller
         }
     }
 
-    public function callback(Request $request)
+    public function midtransCallback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
-        if ($hashed == $request->signature_key) {
-            if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
-                $order = Order::find($request->order_id);
-                $order->update(['status' => 'Sudah Bayar']);
-            }
+        $order = Order::find($request->order_id);
 
-            // Mengembalikan respons HTTP 200 OK
-            return response('OK', 200);
-        } else {
-            // Mengembalikan respons HTTP 400 Bad Request jika signature_key tidak valid
-            return response('Invalid Signature', 400);
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
+
+        if ($hashed !== $request->transaction_hash) {
+            return response()->json(['success' => false, 'message' => 'Invalid transaction hash'], 400);
+        }
+
+        if ($request->status_code == '200') {
+            $order->update([
+                'status' => 'paid'
+            ]);
+        }
+
+        return response(['message' => 'Callback success']);
     }
 
 
