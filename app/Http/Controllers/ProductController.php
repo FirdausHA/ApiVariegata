@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -94,5 +95,52 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
         return response()->json(null, 204);
+    }
+
+    // Method untuk web routes
+    public function webIndex()
+    {
+        $products = Product::get();
+        return view('product.index', ['data' => $products]);
+    }
+
+    public function tambah()
+    {
+        $categories = Category::get();
+        return view('product.form', ['categories' => $categories]);
+    }
+
+    public function simpan(Request $request)
+    {
+        $data = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'price' => $request->price,
+        ];
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        Product::create($data);
+
+        return redirect()->route('product.index');
+    }
+
+
+    public function edit($id)
+    {
+        $product = Product::find($id);
+        $categories = Category::get();
+
+        return view('product.form', ['product' => $product, 'categories' => $categories]);
+    }
+
+    public function hapus($id)
+    {
+        Product::find($id)->delete();
+        return redirect()->route('product.index');
     }
 }

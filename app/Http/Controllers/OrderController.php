@@ -93,17 +93,21 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
 
-        if ($hashed !== $request->transaction_hash) {
-            return response()->json(['success' => false, 'message' => 'Invalid transaction hash'], 400);
+        if ($hashed !== $request->signature_key) {
+            return response()->json(['success' => false, 'message' => 'Invalid signature'], 400);
         }
 
-        if ($request->status_code == '200') {
+        if ($request->status_code == '200'){
             $order->update([
-                'status' => 'paid'
+                'status' => 'Sudah Bayar'
+            ]);
+        } else {
+            $order->update([
+                'status' => 'Belum Bayar'
             ]);
         }
 
-        return response(['message' => 'Callback success']);
+        return response()->json(['success' => true, 'message' => 'Callback processed successfully']);
     }
 
 
