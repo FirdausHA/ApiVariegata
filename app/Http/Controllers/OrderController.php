@@ -86,13 +86,21 @@ class OrderController extends Controller
     {
         $serverKey = config('midtrans.server_key');
         $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+
         if ($hashed == $request->signature_key) {
             if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
                 $order = Order::find($request->order_id);
                 $order->update(['status' => 'Sudah Bayar']);
             }
+
+            // Mengembalikan respons HTTP 200 OK
+            return response('OK', 200);
+        } else {
+            // Mengembalikan respons HTTP 400 Bad Request jika signature_key tidak valid
+            return response('Invalid Signature', 400);
         }
     }
+
 
     public function userTransactions(Request $request)
     {
