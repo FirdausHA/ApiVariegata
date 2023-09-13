@@ -14,7 +14,7 @@ class CartController extends Controller
         return response()->json($cartItems);
     }
 
-    public function addToCart(Request $request)
+    public function addToCart (Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -23,6 +23,11 @@ class CartController extends Controller
 
         try {
             $product = Product::findOrFail($request->input('product_id'));
+
+            // Periksa apakah stok mencukupi
+            if ($product->stock < $request->input('quantity')) {
+                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
+            }
 
             // Periksa apakah produk sudah ada dalam keranjang
             $existingCartItem = Cart::where('product_id', $product->id)->first();
@@ -38,16 +43,26 @@ class CartController extends Controller
 
             $cartItem->save();
 
+            // Kurangkan stok produk
+            $product->stock -= $request->input('quantity');
+            $product->save();
+
             return response()->json(['message' => 'Product added to cart successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to add product to cart'], 500);
         }
     }
 
-    public function removeFromCart($cartItemId)
+    public function removeFromCart ($cartItemId)
     {
         try {
             $cartItem = Cart::findOrFail($cartItemId);
+
+            // Kembalikan stok produk yang dihapus dari keranjang
+            $product = Product::find($cartItem->product_id);
+            $product->stock += $cartItem->quantity;
+            $product->save();
+
             $cartItem->delete();
 
             return response()->json(['message' => 'Product removed from cart successfully']);
@@ -56,7 +71,7 @@ class CartController extends Controller
         }
     }
 
-    public function updateCartItem(Request $request, $cartItemId)
+    public function updateCartItem (Request $request, $cartItemId)
     {
         $request->validate([
             'quantity' => 'required|numeric|min:1',
@@ -64,10 +79,30 @@ class CartController extends Controller
 
         try {
             $cartItem = Cart::findOrFail($cartItemId);
+            $originalQuantity = $cartItem->quantity;
+
+            // Mengembalikan stok produk yang diupdate ke stok produk yang asli
+            $product = Product::find($cartItem->product_id);
+            $product->stock += $originalQuantity;
+            $product->save();
+
+            // Update jumlah item dalam keranjang
             $cartItem->quantity = $request->input('quantity');
             $cartItem->save();
 
-            return response()->json(['message' => 'Cart item updated successfully']);
+            // Kurangkan stok produk sesuai dengan jumlah yang baru
+            if ($product->stock >= $request->input('quantity')) {
+                $product->stock -= $request->input('quantity');
+                $product->save();
+
+                return response()->json(['message' => 'Cart item updated successfully']);
+            } else {
+                // Jika stok tidak mencukupi, kembalikan stok produk ke jumlah asli
+                $product->stock += $request->input('quantity');
+                $product->save();
+
+                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update cart item'], 500);
         }
