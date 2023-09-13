@@ -15,13 +15,16 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('transaction_code');
-            $table->integer('product_id');
-            $table->integer('user_id');
-            $table->bigInteger('alamat_id');
-            $table->enum('status_diulas', ['menunggu diulas', 'sudah diulas'])->default('menunggu diulas');
-            $table->enum('status', ['Menunggu pembayaran', 'Menunggu konfirmasi', 'Sedang disiapkan', 'Menunggu driver', 'Sedang diantar', 'Selesai'])->default('Menunggu pembayaran');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('addresses_id');
+            $table->integer('qty');
+            $table->double('total_price', 10, 2);
+            $table->enum('status', ['Belum Bayar', 'Sudah Bayar']);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

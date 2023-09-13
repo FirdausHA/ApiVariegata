@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\userAdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InformasiController;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(AuthController::class)->group(function () {
+Route::controller(userAdminController::class)->group(function () {
 	Route::get('register', 'register')->name('register');
 	Route::post('register', 'registerSimpan')->name('register.simpan');
 
@@ -36,19 +36,19 @@ Route::get('/', function () {
 	return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+
     Route::get('dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::prefix('product')->group(function () {
-        Route::get('products', [ProductController::class, 'index'])->name('product');
-        Route::get('products/tambah', [ProductController::class, 'tambah'])->name('product.tambah');
-        Route::post('products/simpan', [ProductController::class, 'simpan'])->name('product.tambah.simpan');
-        Route::get('products/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
-        Route::post('products/update/{id}', [ProductController::class, 'update'])->name('product.update');
-        Route::get('products/hapus/{id}', [ProductController::class, 'hapus'])->name('product.hapus');
-    });
+
+Route::get('/products', [ProductController::class, 'webIndex'])->name('product.index');
+Route::get('/products/tambah', [ProductController::class, 'tambah'])->name('product.tambah');
+Route::post('/products/simpan', [ProductController::class, 'simpan'])->name('product.simpan');
+Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
+Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::get('/products/hapus/{id}', [ProductController::class, 'hapus'])->name('product.hapus');
+
 
     Route::prefix('Category')->group(function () {
         Route::get('/category', [CategoryController::class, 'index'])->name('category');
@@ -113,4 +113,3 @@ Route::middleware('auth')->group(function () {
         Route::get('contents/hapus/{id}', [ContentController::class, 'hapus'])->name('content.hapus');
     });
 
-});
