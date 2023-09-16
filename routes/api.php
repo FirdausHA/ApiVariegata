@@ -14,6 +14,9 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCrosellController;
+use App\Http\Controllers\ReviewProductController;
+
 
 
 /*
@@ -47,6 +50,16 @@ Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
+
+Route::get('/product-crosell', [ProductCrosellController::class, 'index']); // Menampilkan semua produk
+Route::post('/product-crosell', [ProductCrosellController::class, 'store']); // Menambahkan produk baru
+Route::put('/product-crosell{id}', [ProductCrosellController::class, 'update']); // Memperbarui produk berdasarkan ID
+Route::delete('product-crosell/{id}', [ProductCrosellController::class, 'delete']); // Menghapus produk berdasarkan ID
+
+Route::get('/product-reviews', [ReviewProductController::class, 'index']); // Menampilkan semua ulasan
+Route::post('/product-reviews', [ReviewProductController::class, 'store']); // Menambahkan ulasan
+Route::put('/product-reviews{id}', [ReviewProductController::class, 'update']); // Memperbarui ulasan
+Route::delete('/product-reviews{id}', [ReviewProductController::class, 'destroy']); // Menghapus ulasan
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
