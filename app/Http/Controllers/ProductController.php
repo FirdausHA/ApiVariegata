@@ -93,26 +93,13 @@ class ProductController extends Controller
             return response()->json(['error' => 'Failed to update product'], 500);
         }
     }
+
     public function destroy($id)
     {
-        try {
-            $product = Product::findOrFail($id);
-
-            // Menghapus gambar produk dari penyimpanan
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-
-            // Menghapus produk dari database
-            $product->delete();
-
-            return response()->json(['message' => 'Product deleted successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to delete product'], 500);
-        }
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return response()->json(null, 204);
     }
-
-
 
     public function updateProductStock(Request $request, $productId)
     {
