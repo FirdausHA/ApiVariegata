@@ -96,15 +96,21 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        try {
+            $product = Product::findOrFail($id);
 
-        $product->stock += $product->stock;
-        $product->save();
+            // Set the stock to zero before deleting the product
+            $product->stock = 0;
+            $product->save();
 
-        $product->delete();
-        return response()->json(null, 204);
+            $product->delete();
+            return response()->json(['message' => 'Product deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete product'], 500);
+        }
     }
-    
+
+
     public function updateProductStock(Request $request, $productId)
     {
         $request->validate([
