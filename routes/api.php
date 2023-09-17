@@ -92,12 +92,14 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
+Route::put('/products/{id}/update-stock', [ProductController::class, 'updateProductStock']);
 
 Route::get('cart', [CartController::class, 'index']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::delete('remove-from-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
 Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
+Route::post('/cart/place-order', [CartController::class, 'placeOrder']);
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
 Route::get('/hamas', [HamaController::class,'index']);

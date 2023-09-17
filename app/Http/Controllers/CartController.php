@@ -119,4 +119,30 @@ class CartController extends Controller
 
         return response()->json(['total_price' => $totalPrice]);
     }
+    public function placeOrder(Request $request)
+    {
+        // Validasi pesanan di sini
+
+        $orderData = $request->all(); // Ambil data pesanan dari permintaan
+
+        // Loop melalui produk dalam pesanan
+        foreach ($orderData['products'] as $productData) {
+            $product = Product::findOrFail($productData['product_id']);
+
+            // Periksa apakah stok mencukupi
+            if ($product->stock < $productData['quantity']) {
+                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
+            }
+
+            // Kurangkan stok produk
+            $product->stock -= $productData['quantity'];
+            $product->save();
+        }
+
+        // Simpan pesanan ke database dan lain-lain...
+
+        // Kemudian kirim respons bahwa pesanan berhasil ditempatkan
+        return response()->json(['message' => 'Pesanan berhasil ditempatkan']);
+    }
+
 }
