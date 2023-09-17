@@ -14,6 +14,9 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCrosellController;
+use App\Http\Controllers\ReviewProductController;
+
 
 
 /*
@@ -40,6 +43,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/addresses', [AddressController::class, 'index']);
+Route::put('/addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
 Route::post('/addresses', [AddressController::class, 'store']);
 Route::put('/addresses/{id}', [AddressController::class, 'update']);
 Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
@@ -47,6 +51,20 @@ Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
+
+Route::prefix('productcrosell')->group(function () {
+    Route::get('/', [ProductCrosellController::class, 'index']);
+    Route::post('/', [ProductCrosellController::class, 'store']);
+    Route::put('/{id}', [ProductCrosellController::class, 'update']);
+    Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
+});
+
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewProductController::class, 'index']);
+    Route::post('/', [ReviewProductController::class, 'store']);
+    Route::put('/{id}', [ReviewProductController::class, 'update']);
+    Route::delete('/{id}', [ReviewProductController::class, 'destroy']);
+});
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
