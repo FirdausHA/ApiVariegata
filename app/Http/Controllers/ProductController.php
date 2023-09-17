@@ -104,4 +104,29 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(null, 204);
     }
+    
+    public function updateProductStock(Request $request, $productId)
+    {
+        $request->validate([
+            'quantity' => 'required|numeric|min:1',
+        ]);
+
+        try {
+            $product = Product::findOrFail($productId);
+
+            // Periksa apakah stok mencukupi sebelum menguranginya
+            if ($product->stock >= $request->input('quantity')) {
+                // Kurangkan stok produk sesuai dengan permintaan
+                $product->stock -= $request->input('quantity');
+                $product->save();
+
+                return response()->json(['message' => 'Stok produk berhasil diperbarui']);
+            } else {
+                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal memperbarui stok produk'], 500);
+        }
+    }
+
 }
