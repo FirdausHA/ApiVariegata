@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/addresses', [AddressController::class, 'index']);
+Route::put('/addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
 Route::post('/addresses', [AddressController::class, 'store']);
 Route::put('/addresses/{id}', [AddressController::class, 'update']);
 Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
@@ -51,15 +52,19 @@ Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'c
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
 
-Route::get('/product-crosell', [ProductCrosellController::class, 'index']); // Menampilkan semua produk
-Route::post('/product-crosell', [ProductCrosellController::class, 'store']); // Menambahkan produk baru
-Route::put('/product-crosell{id}', [ProductCrosellController::class, 'update']); // Memperbarui produk berdasarkan ID
-Route::delete('product-crosell/{id}', [ProductCrosellController::class, 'delete']); // Menghapus produk berdasarkan ID
+Route::prefix('productcrosell')->group(function () {
+    Route::get('/', [ProductCrosellController::class, 'index']);
+    Route::post('/', [ProductCrosellController::class, 'store']);
+    Route::put('/{id}', [ProductCrosellController::class, 'update']);
+    Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
+});
 
-Route::get('/product-reviews', [ReviewProductController::class, 'index']); // Menampilkan semua ulasan
-Route::post('/product-reviews', [ReviewProductController::class, 'store']); // Menambahkan ulasan
-Route::put('/product-reviews{id}', [ReviewProductController::class, 'update']); // Memperbarui ulasan
-Route::delete('/product-reviews{id}', [ReviewProductController::class, 'destroy']); // Menghapus ulasan
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewProductController::class, 'index']);
+    Route::post('/', [ReviewProductController::class, 'store']);
+    Route::put('/{id}', [ReviewProductController::class, 'update']);
+    Route::delete('/{id}', [ReviewProductController::class, 'destroy']);
+});
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);

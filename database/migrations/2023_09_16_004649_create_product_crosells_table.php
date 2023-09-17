@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price');
             $table->string('image')->nullable();
             $table->integer('stock');
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('expiry_time');
             $table->timestamps();
         });
     }
