@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('nomor_telepon');
             $table->text('catatan_driver')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

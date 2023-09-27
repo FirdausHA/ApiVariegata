@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductCrosell extends Model
 {
     use SoftDeletes;
+
+    protected $fillable = [
+        'name', 'description', 'price', 'image', 'stock', 'expiry_time'
+    ];
 }

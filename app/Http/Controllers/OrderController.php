@@ -82,28 +82,42 @@ class OrderController extends Controller
         }
     }
 
-    public function callback (Request $request)
+    public function callback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        $orderId = $request->order_id;
+        $statusCode = $request->status_code;
+        $grossAmount = $request->gross_amount;
+        $signatureKey = $request->signature_key;
 
-        $order = Order::find($request->order_id);
+        // Verifikasi signature
+        $expectedSignature = hash("sha512", $orderId . $statusCode . $grossAmount . $serverKey);
+
+        if ($expectedSignature !== $signatureKey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid signature',
+            ], 400);
+        }
+
+        // Temukan pesanan berdasarkan ID
+        $order = Order::find($orderId);
 
         if (!$order) {
-            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found',
+            ], 404);
         }
 
-        if ($hashed !== $request->signature_key) {
-            return response()->json(['success' => false, 'message' => 'Invalid signature'], 400);
-        }
-
-        if ($request->status_code == '200'){
+        // Perbarui status pesanan berdasarkan status code
+        if ($statusCode == '200') {
             $order->update([
-                'status' => 'Sudah Bayar'
+                'status' => 'Sudah Bayar',
             ]);
         } else {
             $order->update([
-                'status' => 'Belum Bayar'
+                'status' => 'Belum Bayar',
             ]);
         }
 

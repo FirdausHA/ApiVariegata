@@ -14,6 +14,23 @@ class AddressController extends Controller
         return response()->json(['addresses' => $addresses], 200);
     }
 
+    public function setAsDefault($id)
+    {
+        $address = Address::find($id);
+
+        if (!$address) {
+            return response()->json(['message' => 'Address not found'], 404);
+        }
+
+        // Set Untuk semua alamat lain sebagai bukan alamat utama
+        Address::where('id', '!=', $id)->update(['is_default' => false]);
+
+        // Set alamat saat ini sebagai alamat utama
+        $address->update(['is_default' => true]);
+
+        return response()->json(['message' => 'Address set as default'], 200);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
