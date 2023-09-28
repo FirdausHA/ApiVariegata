@@ -67,15 +67,19 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Mendapatkan user yang sedang login
-        $user = Auth::user();
+        // Mengecek apakah pengguna sudah login
+        if (Auth::check()) {
+            // Menghapus access token saat ini dari database
+            $request->user()->tokens->each(function ($token, $key) {
+                $token->delete();
+            });
 
-        // Menghapus access token saat ini dari database
-        $request->user()->tokens->each(function ($token, $key) {
-            $token->delete();
-        });
-
-        // Mengembalikan respons
-        return response()->json(['message' => 'Logged out successfully'], 200);
+            // Mengembalikan respons
+            return response()->json(['message' => 'Logged out successfully'], 200);
+        } else {
+            // Jika pengguna belum login, Anda bisa memberikan respons kesalahan sesuai kebutuhan.
+            return response()->json(['message' => 'User not logged in'], 401);
+        }
     }
+
 }
