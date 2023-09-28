@@ -32,6 +32,7 @@ use App\Http\Controllers\ReviewProductController;
 
 Route::get('/users', [AuthController::class, 'getAllUsers']);
 Route::post('/auth/register', [AuthController::class, 'register']);
+
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['auth:sanctum'])->group(function () {

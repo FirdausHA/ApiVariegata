@@ -42,7 +42,7 @@ class AuthController extends Controller
         return response()->json($response, 200);
     }
 
-    public function login (Request $req)
+    public function login(Request $req)
     {
         // Validate inputs
         $rules = [
