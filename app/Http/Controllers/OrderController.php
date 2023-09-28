@@ -85,25 +85,70 @@ class OrderController extends Controller
     public function callback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
+        $orderId = $request->order_id;
+        $statusCode = $request->status_code;
+        $grossAmount = $request->gross_amount;
+        $signatureKey = $request->signature_key;
 
-        if ($hashed == $request->signature_key) {
-            if ($request->transaction_status == 'capture' || $request->transaction_status == 'settlement') {
-                $order = Order::find($request->order_id);
-                $order->update(['status' => 'Sudah Bayar']);
-            }
+        // Verifikasi signature
+        $expectedSignature = hash("sha512", $orderId . $statusCode . $grossAmount . $serverKey);
+
+        if ($expectedSignature !== $signatureKey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid signature',
+            ], 400);
         }
+
+        // Temukan pesanan berdasarkan ID
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found',
+            ], 404);
+        }
+
+        // Perbarui status pesanan berdasarkan status code
+        if ($statusCode == '200') {
+            $order->update([
+                'status' => 'Sudah Bayar',
+            ]);
+        } else {
+            $order->update([
+                'status' => 'Belum Bayar',
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Callback processed successfully']);
     }
+
 
     public function userTransactions(Request $request)
     {
+        // Memeriksa apakah pengguna sudah terotentikasi
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not authenticated',
+            ], 401);
+        }
+
         $user = Auth::user();
+
         $transactions = Order::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
         if ($request->has('id')) {
             $order = Order::find($request->id);
+            if (!$order) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found',
+                ], 404);
+            }
             return view('invoice', compact('order', 'transactions'));
         }
 

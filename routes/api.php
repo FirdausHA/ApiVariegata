@@ -14,6 +14,9 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCrosellController;
+use App\Http\Controllers\ReviewProductController;
+
 
 
 /*
@@ -30,22 +33,36 @@ use App\Http\Controllers\OrderController;
 Route::get('/users', [AuthController::class, 'getAllUsers']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::get('/addresses', [AddressController::class, 'index']);
+Route::put('/addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
 Route::post('/addresses', [AddressController::class, 'store']);
 Route::put('/addresses/{id}', [AddressController::class, 'update']);
 Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
-Route::get('/user-transactions', [OrderController::class, 'userTransactions']);
+Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
 
-// Route::post('/request-payment', [TransactionController::class, 'requestPayment']);
-// Route::post('/payment-callback', [TransactionController::class, 'paymentCallback']);
+Route::prefix('productcrosell')->group(function () {
+    Route::get('/', [ProductCrosellController::class, 'index']);
+    Route::post('/', [ProductCrosellController::class, 'store']);
+    Route::put('/{id}', [ProductCrosellController::class, 'update']);
+    Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
+});
+
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewProductController::class, 'index']);
+    Route::post('/', [ReviewProductController::class, 'store']);
+    Route::put('/{id}', [ReviewProductController::class, 'update']);
+    Route::delete('/{id}', [ReviewProductController::class, 'destroy']);
+});
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
@@ -73,12 +90,14 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
+Route::put('/products/{id}/update-stock', [ProductController::class, 'updateProductStock']);
 
 Route::get('cart', [CartController::class, 'index']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::delete('remove-from-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
 Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
+Route::post('/cart/place-order', [CartController::class, 'placeOrder']);
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
 Route::get('/hamas', [HamaController::class,'index']);
