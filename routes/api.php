@@ -17,8 +17,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCrosellController;
 use App\Http\Controllers\ReviewProductController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,7 +45,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('addresses', [AddressController::class, 'store']);
     Route::put('addresses/{id}', [AddressController::class, 'update']);
     Route::delete('addresses/{id}', [AddressController::class, 'destroy']);
-    Route::put('addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
 });
 
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
