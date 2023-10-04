@@ -13,17 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('review_products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('nama');
-            $table->string('alamat');
-            $table->string('nomor_telepon');
-            $table->string('catatan_driver')->nullable();
-            $table->boolean('is_default')->default(false);
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('transaction_code');
+            $table->text('comment', 10000);
+            $table->integer('rating');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('review_products');
     }
 };

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Cart;
 
 class ProductController extends Controller
 {
@@ -23,6 +26,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'required|integer', // Validasi untuk stok ditambahkan
         ]);
 
         try {
@@ -31,6 +35,7 @@ class ProductController extends Controller
             $product->description = $request->input('description');
             $product->price = $request->input('price');
             $product->category_id = $request->input('category_id');
+            $product->stock = $request->input('stock');
 
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('product_images', 'public');
@@ -64,6 +69,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'required|integer',
         ]);
 
         try {
@@ -72,6 +78,7 @@ class ProductController extends Controller
             $product->description = $request->input('description');
             $product->price = $request->input('price');
             $product->category_id = $request->input('category_id');
+            $product->stock = $request->input('stock');
 
             if ($request->hasFile('image')) {
                 Storage::disk('public')->delete($product->image);
@@ -95,4 +102,32 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(null, 204);
     }
+
+    public function updateProductStock(Request $request, $productId)
+    {
+        $request->validate([
+            'quantity' => 'required|numeric|min:1',
+        ]);
+
+        try {
+            $product = Product::findOrFail($productId);
+
+            // Periksa apakah stok mencukupi sebelum menguranginya
+            if ($product->stock >= $request->input('quantity')) {
+                // Kurangkan stok produk sesuai dengan permintaan
+                $product->stock -= $request->input('quantity');
+                $product->save();
+
+                // Jika ada perubahan pada stok produk, perbarui stok di cart juga
+                Cart::where('product_id', $productId)->update(['quantity' => DB::raw('quantity - ' . $request->input('quantity'))]);
+
+                return response()->json(['message' => 'Stok produk berhasil diperbarui']);
+            } else {
+                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal memperbarui stok produk'], 500);
+        }
+    }
+
 }

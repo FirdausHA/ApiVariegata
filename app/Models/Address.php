@@ -15,5 +15,11 @@ class Address extends Model
         'alamat',
         'nomor_telepon',
         'catatan_driver',
+        'is_default',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
