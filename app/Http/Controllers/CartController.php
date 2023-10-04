@@ -14,7 +14,7 @@ class CartController extends Controller
         return response()->json($cartItems);
     }
 
-    public function addToCart (Request $request)
+    public function addToCart(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -33,15 +33,17 @@ class CartController extends Controller
             $existingCartItem = Cart::where('product_id', $product->id)->first();
 
             if ($existingCartItem) {
-                return response()->json(['message' => 'Product is already in the cart']);
+                // Jika produk sudah ada dalam keranjang, tambahkan jumlahnya
+                $existingCartItem->quantity += $request->input('quantity');
+                $existingCartItem->save();
+            } else {
+                $cartItem = new Cart([
+                    'product_id' => $product->id,
+                    'quantity' => $request->input('quantity'),
+                ]);
+
+                $cartItem->save();
             }
-
-            $cartItem = new Cart([
-                'product_id' => $product->id,
-                'quantity' => $request->input('quantity'),
-            ]);
-
-            $cartItem->save();
 
             // Kurangkan stok produk
             $product->stock -= $request->input('quantity');
@@ -53,7 +55,7 @@ class CartController extends Controller
         }
     }
 
-    public function removeFromCart ($cartItemId)
+    public function removeFromCart($cartItemId)
     {
         try {
             $cartItem = Cart::findOrFail($cartItemId);
@@ -71,7 +73,7 @@ class CartController extends Controller
         }
     }
 
-    public function updateCartItem (Request $request, $cartItemId)
+    public function updateCartItem(Request $request, $cartItemId)
     {
         $request->validate([
             'quantity' => 'required|numeric|min:1',
@@ -119,30 +121,4 @@ class CartController extends Controller
 
         return response()->json(['total_price' => $totalPrice]);
     }
-    public function placeOrder(Request $request)
-    {
-        // Validasi pesanan di sini
-
-        $orderData = $request->all(); // Ambil data pesanan dari permintaan
-
-        // Loop melalui produk dalam pesanan
-        foreach ($orderData['products'] as $productData) {
-            $product = Product::findOrFail($productData['product_id']);
-
-            // Periksa apakah stok mencukupi
-            if ($product->stock < $productData['quantity']) {
-                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
-            }
-
-            // Kurangkan stok produk
-            $product->stock -= $productData['quantity'];
-            $product->save();
-        }
-
-        // Simpan pesanan ke database dan lain-lain...
-
-        // Kemudian kirim respons bahwa pesanan berhasil ditempatkan
-        return response()->json(['message' => 'Pesanan berhasil ditempatkan']);
-    }
-
 }

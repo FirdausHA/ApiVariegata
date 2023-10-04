@@ -32,23 +32,23 @@ use App\Http\Controllers\ReviewProductController;
 
 Route::get('/users', [AuthController::class, 'getAllUsers']);
 Route::post('/auth/register', [AuthController::class, 'register']);
-
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/addresses', [AddressController::class, 'index']);
-Route::put('/addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
-Route::post('/addresses', [AddressController::class, 'store']);
-Route::put('/addresses/{id}', [AddressController::class, 'update']);
-Route::delete('/addresses/{id}', [AddressController::class, 'destroy']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('addresses', [AddressController::class, 'index']);
+    Route::post('addresses', [AddressController::class, 'store']);
+    Route::put('addresses/{id}', [AddressController::class, 'update']);
+    Route::delete('addresses/{id}', [AddressController::class, 'destroy']);
+    Route::put('addresses/{id}/set-as-default', [AddressController::class, 'setAsDefault']);
+});
 
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);

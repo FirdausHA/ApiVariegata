@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Cart;
 
 class ProductController extends Controller
 {
@@ -115,6 +117,9 @@ class ProductController extends Controller
                 // Kurangkan stok produk sesuai dengan permintaan
                 $product->stock -= $request->input('quantity');
                 $product->save();
+
+                // Jika ada perubahan pada stok produk, perbarui stok di cart juga
+                Cart::where('product_id', $productId)->update(['quantity' => DB::raw('quantity - ' . $request->input('quantity'))]);
 
                 return response()->json(['message' => 'Stok produk berhasil diperbarui']);
             } else {
