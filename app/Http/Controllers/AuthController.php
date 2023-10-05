@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\Token;
 
 class AuthController extends Controller
 {
@@ -63,12 +65,14 @@ class AuthController extends Controller
         return response()->json($response, 400);
     }
 
-    public function logout(Request $req)
+    public function logout(Request $request)
     {
-        // Revoke the current user's token(s), effectively logging them out
-        $req->user()->tokens()->delete();
+        // Mencabut semua token pengguna yang saat ini masuk
+        $request->user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
 
-        $response = ['message' => 'Logged out successfully'];
-        return response()->json($response, 200);
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
+
 }

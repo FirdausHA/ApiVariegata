@@ -10,29 +10,24 @@ class AddressController extends Controller
 {
     public function index()
     {
-        $addresses = Address::all();
-        return response()->json(['addresses' => $addresses], 200);
-    }
+        $user = Auth::user();
 
-    public function setAsDefault($id)
-    {
-        $address = Address::find($id);
-
-        if (!$address) {
-            return response()->json(['message' => 'Address not found'], 404);
+        if (!$user) {
+            return response()->json(['message' => 'User not authenticated'], 401);
         }
 
-        // Set Untuk semua alamat lain sebagai bukan alamat utama
-        Address::where('id', '!=', $id)->update(['is_default' => false]);
-
-        // Set alamat saat ini sebagai alamat utama
-        $address->update(['is_default' => true]);
-
-        return response()->json(['message' => 'Address set as default'], 200);
+        $addresses = Address::where('user_id', $user->id)->get();
+        return response()->json(['addresses' => $addresses], 200);
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not authenticated'], 401);
+        }
+
         $data = $request->validate([
             'nama' => 'required|string',
             'alamat' => 'required|string',
@@ -40,6 +35,7 @@ class AddressController extends Controller
             'catatan_driver' => 'nullable|string',
         ]);
 
+        $data['user_id'] = $user->id;
         $address = Address::create($data);
 
         return response()->json([
@@ -50,10 +46,20 @@ class AddressController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not authenticated'], 401);
+        }
+
         $address = Address::find($id);
 
         if (!$address) {
             return response()->json(['message' => 'Address not found'], 404);
+        }
+
+        if ($address->user_id !== $user->id) {
+            return response()->json(['message' => 'Address does not belong to the authenticated user'], 403);
         }
 
         $data = $request->validate([
@@ -73,10 +79,20 @@ class AddressController extends Controller
 
     public function destroy($id)
     {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not authenticated'], 401);
+        }
+
         $address = Address::find($id);
 
         if (!$address) {
             return response()->json(['message' => 'Address not found'], 404);
+        }
+
+        if ($address->user_id !== $user->id) {
+            return response()->json(['message' => 'Address does not belong to the authenticated user'], 403);
         }
 
         $address->delete();
