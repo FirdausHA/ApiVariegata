@@ -16,6 +16,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCrosellController;
 use App\Http\Controllers\ReviewProductController;
+use App\Http\Controllers\KeranjangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,12 @@ Route::prefix('reviews')->group(function () {
     Route::put('/{id}', [ReviewProductController::class, 'update']);
     Route::delete('/{id}', [ReviewProductController::class, 'destroy']);
 });
+
+Route::get('/keranjang/listdata', [KeranjangController::class, 'listdata']);
+Route::post('/keranjang/tambah', [KeranjangController::class, 'tambahkeranjang']);
+Route::delete('/keranjang/delete/{cartItemId}', [KeranjangController::class, 'Delete']);
+Route::put('/keranjang/update/{cartItemId}', [KeranjangController::class, 'updateCartItem']);
+Route::get('/keranjang/totalprice', [KeranjangController::class, 'calculateTotalPrice']);
 
 Route::get('plants', [PlantController::class, 'index']);
 Route::post('plants', [PlantController::class, 'store']);
