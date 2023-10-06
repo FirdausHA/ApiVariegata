@@ -31,7 +31,7 @@ use App\Http\Controllers\KeranjangController;
 
 Route::get('/users', [AuthController::class, 'getAllUsers']);
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('api.login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

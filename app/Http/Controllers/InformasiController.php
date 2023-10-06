@@ -83,4 +83,16 @@ class InformasiController extends Controller
         $informasi->delete();
         return response()->json(null, 204);
     }
+
+    //Metode di webnya
+    public function listdata()
+    {
+        $informasis = Informasi::get();
+        return view('informasi.index', ['data' => $informasis]);
+    }
+
+    public function tambah()
+    {
+        return view('informasi.form');
+    }
 }

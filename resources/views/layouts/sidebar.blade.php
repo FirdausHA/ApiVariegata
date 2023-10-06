@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Admin<sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">Variegata</div>
     </a>
 
     <!-- Divider -->
@@ -18,7 +18,7 @@
             <span>Dashboard</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('informasi') }}">
+        <a class="nav-link" href="{{ route('informasi.index') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Informasi</span></a>
     </li>
@@ -42,8 +42,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="{{ route('category') }}">Kategori Barang</a>
-                <a class="collapse-item" href="{{ route('product') }}">Barang</a>
+                <a class="collapse-item" href="{{ route('categories.list') }}">Kategori Barang</a>
+                <a class="collapse-item" href="{{ route('products.index') }}">Barang</a>
             </div>
         </div>
     </li>
@@ -59,30 +59,13 @@
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="{{ route('plant') }}">Tanaman</a>
-                <a class="collapse-item" href="{{ route('hama') }}">Hama</a>
-                <a class="collapse-item" href="{{ route('banner') }}">banner</a>
-                <a class="collapse-item" href="{{ route('stage') }}">Tahap</a>
-                <a class="collapse-item" href="{{ route('content') }}">Content</a>
+                <a class="collapse-item" href="{{ route('plants.index') }}">Tanaman</a>
+                <a class="collapse-item" href="{{ route('hamas.index') }}">Hama</a>
+                <a class="collapse-item" href="{{ route('banners.index') }}">banner</a>
+                <a class="collapse-item" href="{{ route('stages.index') }}">Tahap</a>
+                <a class="collapse-item" href="{{ route('contents.index') }}">Content</a>
             </div>
         </div>
-    </li>
-
-    <!-- Divider -->
-    3630.
-
-    <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables</span></a>
     </li>
 
     <!-- Divider -->

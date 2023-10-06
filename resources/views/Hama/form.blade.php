@@ -3,7 +3,7 @@
 @section('title', 'Form Hama')
 
 @section('contents')
-  <form action="{{ isset($hama) ? route('hama.tambah.update', $hama->id) : route('hama.tambah.simpan') }}" method="post">
+  <form action="{{ isset($hama) ? route('hamas.store.update', $hama->id) : route('hamas.store') }}" method="post">
     @csrf
     <div class="row">
       <div class="col-12">

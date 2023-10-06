@@ -3,7 +3,7 @@
 @section('title', 'Form tahap')
 
 @section('contents')
-  <form action="{{ isset($stage) ? route('stage.tambah.update', $stage->id) : route('stage.tambah.simpan') }}" method="post">
+  <form action="{{ isset($stage) ? route('stages.store.update', $stage->id) : route('stages.store') }}" method="post">
     @csrf
     <div class="row">
       <div class="col-12">

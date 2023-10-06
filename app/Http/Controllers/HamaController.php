@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Hama;
+use App\Models\Plant;
 
 
 class HamaController extends Controller
@@ -99,5 +100,20 @@ class HamaController extends Controller
         $hama = Hama::findOrFail($id);
         $hama->delete();
         return response()->json(null, 204);
+    }
+
+    //Metode Web Admin
+    public function listdata()
+    {
+        $hamas = Hama::get();
+
+        return view('hama.index', ['data' => $hamas]);
+    }
+
+    public function tambah()
+    {
+        $plants = Plant::get();
+
+        return view('hama.form', ['plants' => $plants]);
     }
 }

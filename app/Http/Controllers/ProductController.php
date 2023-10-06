@@ -12,6 +12,8 @@ use App\Models\Cart;
 
 class ProductController extends Controller
 {
+    //Metode atau Fungsi API
+
     public function index()
     {
         $products = Product::all();
@@ -130,4 +132,18 @@ class ProductController extends Controller
         }
     }
 
+    //Metode di webnya
+    public function listdata()
+    {
+        $products = Product::get();
+
+        return view('product.index', ['data' => $products]);
+    }
+
+    public function tambah()
+    {
+        $categories = Category::get();
+
+        return view('product.form', ['categories' => $categories]);
+    }
 }

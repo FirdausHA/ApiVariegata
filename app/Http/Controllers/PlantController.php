@@ -97,4 +97,18 @@ class PlantController extends Controller
         $plant->delete();
         return response()->json(null, 204);
     }
+
+    //Metode Web Admin
+    public function listdata()
+    {
+        $plants = Plant::get();
+
+        return view('plant.index', ['data' => $plants]);
+    }
+
+    public function tambah()
+    {
+
+        return view('plant.form');
+    }
 }

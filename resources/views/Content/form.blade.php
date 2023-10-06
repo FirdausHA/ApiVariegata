@@ -3,7 +3,7 @@
 @section('title', 'Form Content')
 
 @section('contents')
-  <form action="{{ isset($content) ? route('content.tambah.update', $content->id) : route('content.tambah.simpan') }}" method="post">
+  <form action="{{ isset($content) ? route('contents.store.update', $content->id) : route('contents.store') }}" method="post">
     @csrf
     <div class="row">
       <div class="col-12">
