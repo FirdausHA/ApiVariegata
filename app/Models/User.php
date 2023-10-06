@@ -24,6 +24,12 @@ class User extends Authenticatable
         'password',
     ];
 
+    // Dalam model User.php
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

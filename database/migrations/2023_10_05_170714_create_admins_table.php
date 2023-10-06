@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->string('nama');
-            $table->string('alamat');
-            $table->string('nomor_telepon');
-            $table->string('catatan_driver')->nullable();
-            $table->boolean('is_default')->default(false);
+			$table->string('email')->unique();
+			$table->string('password');
+			$table->string('level');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('admins');
     }
 };

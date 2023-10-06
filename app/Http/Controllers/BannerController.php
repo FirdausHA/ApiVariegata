@@ -95,4 +95,19 @@ class BannerController extends Controller
         $banner->delete();
         return response()->json(null, 204);
     }
+
+    // Metode Web Admin
+    public function listdata()
+    {
+        $banners = Banner::get();
+
+        return view('banner.index', ['data' => $banners]);
+    }
+
+    public function tambah()
+    {
+        $plants = Banner::get();
+
+        return view('banner.form', ['plants' => $plants]);
+    }
 }

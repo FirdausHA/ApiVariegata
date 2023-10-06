@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\userAdminController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InformasiController;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(userAdminController::class)->group(function () {
+Route::controller(AdminController::class)->group(function () {
 	Route::get('register', 'register')->name('register');
 	Route::post('register', 'registerSimpan')->name('register.simpan');
 
@@ -41,75 +41,44 @@ Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('/informasi', [InformasiController::class, 'listdata'])->name('informasi.index');
+    Route::get('/informasi/tambah', [InformasiController::class, 'tambah'])->name('informasi.tambah');
+    Route::post('/informasi', [InformasiController::class, 'store'])->name('informasi.store');
+    Route::delete('/informasi/{id}', [InformasiController::class, 'destroy'])->name('informasi.destroy');
 
-Route::get('/products', [ProductController::class, 'webIndex'])->name('product.index');
-Route::get('/products/tambah', [ProductController::class, 'tambah'])->name('product.tambah');
-Route::post('/products/simpan', [ProductController::class, 'simpan'])->name('product.simpan');
-Route::get('/products/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
-Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('product.update');
-Route::get('/products/hapus/{id}', [ProductController::class, 'hapus'])->name('product.hapus');
+    Route::get('/products', [ProductController::class, 'listdata'])->name('products.index');
+    Route::get('/products/tambah', [ProductController::class, 'tambah'])->name('products.tambah');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
+    Route::get('/categories', [CategoryController::class, 'listdata'])->name('categories.list');
+    Route::get('/categories/tambah', [CategoryController::class, 'tambah'])->name('categories.tambah');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-    Route::prefix('Category')->group(function () {
-        Route::get('/category', [CategoryController::class, 'index'])->name('category');
-        Route::get('/category/tambah', [CategoryController::class, 'tambah'])->name('category.tambah');
-        Route::post('/category/simpan', [CategoryController::class, 'simpan'])->name('category.tambah.simpan');
-        Route::get('/category/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
-        Route::post('/category/update/{id}', [CategoryController::class, 'update'])->name('category.update');
-        Route::get('/category/hapus/{id}', [CategoryController::class, 'hapus'])->name('category.hapus');
-    });
+    Route::get('/plants', [PlantController::class, 'listdata'])->name('plants.index');
+    Route::get('/plants/tambah', [PlantController::class, 'tambah'])->name('plants.tambah');
+    Route::post('/plants', [PlantController::class, 'store'])->name('plants.store');
+    Route::delete('/plants/{id}', [PlantController::class, 'destroy'])->name('plants.destroy');
 
-    Route::prefix('informasi')->group(function () {
-        Route::get('informasis', [InformasiController::class, 'index'])->name('informasi');
-        Route::get('informasis/tambah', [InformasiController::class, 'tambah'])->name('informasi.tambah');
-        Route::post('informasis/simpan', [InformasiController::class, 'simpan'])->name('informasi.tambah.simpan');
-        Route::get('informasis/edit/{id}', [InformasiController::class, 'edit'])->name('informasi.edit');
-        Route::post('informasis/update/{id}', [InformasiController::class, 'update'])->name('informasi.update');
-        Route::get('informasis/hapus/{id}', [InformasiController::class, 'hapus'])->name('informasi.hapus');
-    });
+    Route::get('/hamas', [HamaController::class, 'listdata'])->name('hamas.index');
+    Route::get('/hamas/tambah', [HamaController::class, 'tambah'])->name('hamas.tambah');
+    Route::post('/hamas', [HamaController::class, 'store'])->name('hamas.store');
+    Route::delete('/hamas/{id}', [HamaController::class, 'destroy'])->name('hamas.destroy');
 
-    Route::prefix('plant')->group(function () {
-        Route::get('plants', [PlantController::class, 'index'])->name('plant');
-        Route::get('plants/tambah', [PlantController::class, 'tambah'])->name('plant.tambah');
-        Route::post('plants/simpan', [PlantController::class, 'simpan'])->name('plant.tambah.simpan');
-        Route::get('plants/edit/{id}', [PlantController::class, 'edit'])->name('plant.edit');
-        Route::post('plants/update/{id}', [PlantController::class, 'update'])->name('plant.update');
-        Route::get('plants/hapus/{id}', [PlantController::class, 'hapus'])->name('plant.hapus');
-    });
+    Route::get('/banners', [BannerController::class, 'listdata'])->name('banners.index');
+    Route::get('/banners/tambah', [BannerController::class, 'tambah'])->name('banners.tambah');
+    Route::post('/banners', [BannerController::class, 'store'])->name('banners.store');
+    Route::delete('/banners/{id}', [BannerController::class, 'destroy'])->name('banners.destroy');
 
-    Route::prefix('banner')->group(function () {
-        Route::get('banners/', [BannerController::class, 'index'])->name('banner');
-        Route::get('banners/tambah', [BannerController::class, 'tambah'])->name('banner.tambah');
-        Route::post('banners/simpan', [BannerController::class, 'simpan'])->name('banner.tambah.simpan');
-        Route::get('banners/edit/{id}', [BannerController::class, 'edit'])->name('banner.edit');
-        Route::post('banners/update/{id}', [BannerController::class, 'update'])->name('banner.update');
-        Route::get('banners/hapus/{id}', [BannerController::class, 'hapus'])->name('banner.hapus');
-    });
+    Route::get('/stages', [StageController::class, 'listdata'])->name('stages.index');
+    Route::get('/stages/tambah', [StageController::class, 'tambah'])->name('stages.tambah');
+    Route::post('/stages', [StageController::class, 'store'])->name('stages.store');
+    Route::delete('/stages/{id}', [StageController::class, 'destroy'])->name('stages.destroy');
 
-    Route::prefix('stage')->group(function () {
-        Route::get('stages/', [StageController::class, 'index'])->name('stage');
-        Route::get('stages/tambah', [StageController::class, 'tambah'])->name('stage.tambah');
-        Route::post('stages/simpan', [StageController::class, 'simpan'])->name('stage.tambah.simpan');
-        Route::get('stages/edit/{id}', [StageController::class, 'edit'])->name('stage.edit');
-        Route::post('stages/update/{id}', [StageController::class, 'update'])->name('stage.update');
-        Route::get('stages/hapus/{id}', [StageController::class, 'hapus'])->name('stage.hapus');
-    });
+    Route::get('/contents', [ContentController::class, 'listdata'])->name('contents.index');
+    Route::get('/contents/tambah', [ContentController::class, 'tambah'])->name('contents.tambah');
+    Route::post('/contents', [ContentController::class, 'store'])->name('contents.store');
+    Route::delete('/contents/{id}', [ContentController::class, 'destroy'])->name('contents.destroy');
 
-    Route::prefix('hama')->group(function () {
-        Route::get('hamas/', [HamaController::class, 'index'])->name('hama');
-        Route::get('hamas/tambah', [HamaController::class, 'tambah'])->name('hama.tambah');
-        Route::post('hamas/simpan', [HamaController::class, 'simpan'])->name('hama.tambah.simpan');
-        Route::get('hamas/edit/{id}', [HamaController::class, 'edit'])->name('hama.edit');
-        Route::post('hamas/update/{id}', [HamaController::class, 'update'])->name('hama.update');
-        Route::get('hamas/hapus/{id}', [HamaController::class, 'hapus'])->name('hama.hapus');
-    });
-
-    Route::prefix('content')->group(function () {
-        Route::get('contents/', [ContentController::class, 'index'])->name('content');
-        Route::get('contents/tambah', [ContentController::class, 'tambah'])->name('content.tambah');
-        Route::post('contents/simpan', [ContentController::class, 'simpan'])->name('content.tambah.simpan');
-        Route::get('contents/edit/{id}', [ContentController::class, 'edit'])->name('content.edit');
-        Route::post('contents/update/{id}', [ContentController::class, 'update'])->name('content.update');
-        Route::get('contents/hapus/{id}', [ContentController::class, 'hapus'])->name('content.hapus');
-    });
 

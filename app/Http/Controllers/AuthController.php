@@ -67,15 +67,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Mendapatkan user yang sedang login
-        $user = Auth::user();
-
-        // Menghapus access token saat ini dari database
+        // Mencabut semua token pengguna yang saat ini masuk
         $request->user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
 
-        // Mengembalikan respons
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
+
 }

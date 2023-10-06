@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\Cart;
+use App\Models\Keranjang;
 
-class CartController extends Controller
+class KeranjangController extends Controller
 {
-    public function index()
+    public function listdata()
     {
-        $cartItems = Cart::with('product')->get();
+        $cartItems = Keranjang::with('product')->get();
         return response()->json($cartItems);
     }
 
-    public function addToCart(Request $request)
+    public function tambahkeranjang(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -30,14 +30,14 @@ class CartController extends Controller
             }
 
             // Periksa apakah produk sudah ada dalam keranjang
-            $existingCartItem = Cart::where('product_id', $product->id)->first();
+            $existingCartItem = Keranjang::where('product_id', $product->id)->first();
 
             if ($existingCartItem) {
                 // Jika produk sudah ada dalam keranjang, tambahkan jumlahnya
                 $existingCartItem->quantity += $request->input('quantity');
                 $existingCartItem->save();
             } else {
-                $cartItem = new Cart([
+                $cartItem = new Keranjang([
                     'product_id' => $product->id,
                     'quantity' => $request->input('quantity'),
                 ]);
@@ -55,10 +55,10 @@ class CartController extends Controller
         }
     }
 
-    public function removeFromCart($cartItemId)
+    public function Delete($cartItemId)
     {
         try {
-            $cartItem = Cart::findOrFail($cartItemId);
+            $cartItem = Keranjang::findOrFail($cartItemId);
 
             // Kembalikan stok produk yang dihapus dari keranjang
             $product = Product::find($cartItem->product_id);
@@ -80,7 +80,7 @@ class CartController extends Controller
         ]);
 
         try {
-            $cartItem = Cart::findOrFail($cartItemId);
+            $cartItem = Keranjang::findOrFail($cartItemId);
             $originalQuantity = $cartItem->quantity;
 
             // Mengembalikan stok produk yang diupdate ke stok produk yang asli
@@ -112,7 +112,7 @@ class CartController extends Controller
 
     public function calculateTotalPrice()
     {
-        $cartItems = Cart::all();
+        $cartItems = Keranjang::all();
         $totalPrice = 0;
 
         foreach ($cartItems as $cartItem) {
