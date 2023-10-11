@@ -32,7 +32,7 @@
                 </td>
                 <td>
                   {{-- <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning">Edit</a> --}}
-                  <form method="POST" action="{{ route('informasi.destroy', $category->id) }}">
+                  <form method="POST" action="{{ route('informasi.destroy', $informasi->id) }}">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Anda yakin ingin menghapus kategori ini?')">Delete</button>

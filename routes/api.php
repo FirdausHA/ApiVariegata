@@ -59,11 +59,11 @@ Route::prefix('productcrosell')->group(function () {
     Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
 });
 
-Route::prefix('reviews')->group(function () {
-    Route::get('/', [ReviewProductController::class, 'index']);
-    Route::post('/', [ReviewProductController::class, 'store']);
-    Route::put('/{id}', [ReviewProductController::class, 'update']);
-    Route::delete('/{id}', [ReviewProductController::class, 'destroy']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/reviews', [ReviewProductController::class, 'index']);
+    Route::post('/reviews', [ReviewProductController::class, 'store']);
+    Route::put('/reviews/{id}', [ReviewProductController::class, 'update']);
+    Route::delete('/reviews/{id}', [ReviewProductController::class, 'destroy']);
 });
 
 Route::get('/keranjang/listdata', [KeranjangController::class, 'listdata']);
@@ -105,7 +105,6 @@ Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::delete('remove-from-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
 Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
-Route::post('/cart/place-order', [CartController::class, 'placeOrder']);
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
 Route::get('/hamas', [HamaController::class,'index']);

@@ -18,6 +18,11 @@
             <span>Dashboard</span></a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('users.index') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>User</span></a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('informasi.index') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Informasi</span></a>
