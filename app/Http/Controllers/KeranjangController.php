@@ -8,13 +8,13 @@ use App\Models\Keranjang;
 
 class KeranjangController extends Controller
 {
-    public function listdata()
+    public function listCart()
     {
         $cartItems = Keranjang::with('product')->get();
         return response()->json($cartItems);
     }
 
-    public function tambahkeranjang(Request $request)
+    public function addToChart(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -43,7 +43,7 @@ class KeranjangController extends Controller
                 ]);
 
                 $cartItem->save();
-            }
+            }  
 
             // Kurangkan stok produk
             $product->stock -= $request->input('quantity');
@@ -55,7 +55,7 @@ class KeranjangController extends Controller
         }
     }
 
-    public function Delete($cartItemId)
+    public function DeleteAll($cartItemId)
     {
         try {
             $cartItem = Keranjang::findOrFail($cartItemId);
