@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -40,6 +41,8 @@ Route::get('/', function () {
     Route::get('dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get('/users', [AuthController::class, 'listUsers'])->name('users.index');
 
     Route::get('/informasi', [InformasiController::class, 'listdata'])->name('informasi.index');
     Route::get('/informasi/tambah', [InformasiController::class, 'tambah'])->name('informasi.tambah');
