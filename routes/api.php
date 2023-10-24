@@ -102,8 +102,8 @@ Route::put('/products/{id}/update-stock', [ProductController::class, 'updateProd
 
 Route::get('cart', [CartController::class, 'index']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
-Route::delete('remove-from-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
-Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
+Route::delete('delete-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
+Route::put('update-cart/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
