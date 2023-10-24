@@ -75,4 +75,10 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
+    public function listUsers()
+    {
+        $users = User::get();
+        return view('user', ['users' => $users]);
+    }
+
 }
