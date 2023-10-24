@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Content;
+use App\Models\Stage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
@@ -98,5 +99,20 @@ class ContentController extends Controller
         $content = Content::findOrFail($id);
         $content->delete();
         return response()->json(null, 204);
+    }
+
+    // Metode Web Admin
+    public function listdata()
+    {
+        $contents = Content::get();
+
+        return view('content.index', ['data' => $contents]);
+    }
+
+    public function tambah()
+    {
+        $stages = Stage::get();
+
+        return view('content.form', ['stages' => $stages]);
     }
 }

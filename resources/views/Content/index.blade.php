@@ -8,9 +8,7 @@
       <h6 class="m-0 font-weight-bold text-primary">Data Content</h6>
     </div>
     <div class="card-body">
-			@if (auth()->user()->level == 'Admin')
-      <a href="{{ route('content.tambah') }}" class="btn btn-primary mb-3">Tambah Content</a>
-			@endif
+      <a href="{{ route('contents.tambah') }}" class="btn btn-primary mb-3">Tambah Content</a>
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
@@ -21,9 +19,7 @@
               <th>Deskripsi</th>
               <th>Kategori</th>
               <th>Gambar</th>
-							@if (auth()->user()->level == 'Admin')
               <th>Action</th>
-							@endif
             </tr>
           </thead>
           <tbody>
@@ -39,12 +35,14 @@
                 <td>
                     <img src="{{ asset('storage/' . $row->image) }}" alt="content Image" heigth="100" width="100">
                 </td>
-								@if (auth()->user()->level == 'Admin')
                 <td>
-                  <a href="{{ route('content.edit', $row->id) }}" class="btn btn-warning">Edit</a>
-                  <a href="{{ route('content.hapus', $row->id) }}" class="btn btn-danger">Hapus</a>
+                  {{-- <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning">Edit</a> --}}
+                  <form method="POST" action="{{ route('contents.destroy', $category->id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Anda yakin ingin menghapus kategori ini?')">Delete</button>
+                </form>
                 </td>
-								@endif
               </tr>
             @endforeach
           </tbody>

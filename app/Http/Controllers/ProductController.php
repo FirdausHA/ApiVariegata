@@ -12,6 +12,7 @@ use App\Models\Cart;
 
 class ProductController extends Controller
 {
+    //Metode atau Fungsi API
     public function index()
     {
         $products = Product::all();
@@ -26,7 +27,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'stock' => 'required|integer', // Validasi untuk stok ditambahkan
+            'stock' => 'required|integer',
         ]);
 
         try {
@@ -103,31 +104,18 @@ class ProductController extends Controller
         return response()->json(null, 204);
     }
 
-    public function updateProductStock(Request $request, $productId)
+    //Metode di webnya
+    public function listdata()
     {
-        $request->validate([
-            'quantity' => 'required|numeric|min:1',
-        ]);
+        $products = Product::get();
 
-        try {
-            $product = Product::findOrFail($productId);
-
-            // Periksa apakah stok mencukupi sebelum menguranginya
-            if ($product->stock >= $request->input('quantity')) {
-                // Kurangkan stok produk sesuai dengan permintaan
-                $product->stock -= $request->input('quantity');
-                $product->save();
-
-                // Jika ada perubahan pada stok produk, perbarui stok di cart juga
-                Cart::where('product_id', $productId)->update(['quantity' => DB::raw('quantity - ' . $request->input('quantity'))]);
-
-                return response()->json(['message' => 'Stok produk berhasil diperbarui']);
-            } else {
-                return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal memperbarui stok produk'], 500);
-        }
+        return view('product.index', ['data' => $products]);
     }
 
+    public function tambah()
+    {
+        $categories = Category::get();
+
+        return view('product.form', ['categories' => $categories]);
+    }
 }

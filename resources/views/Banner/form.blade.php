@@ -3,7 +3,7 @@
 @section('title', 'Form Banner')
 
 @section('contents')
-  <form action="{{ isset($banner) ? route('banner.tambah.update', $banner->id) : route('banner.tambah.simpan') }}" method="post">
+  <form action="{{ isset($banner) ? route('banners.store.update', $banner->id) : route('banners.store') }}" method="post">
     @csrf
     <div class="row">
       <div class="col-12">

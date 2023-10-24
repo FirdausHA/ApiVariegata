@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Stage;
+use App\Models\Banner;
 
 class StageController extends Controller
 {
@@ -68,5 +69,20 @@ class StageController extends Controller
         $stage = Stage::findOrFail($id);
         $stage->delete();
         return response()->json(null, 204);
+    }
+
+    // Metode Web Admin
+    public function listdata()
+    {
+        $stages = Stage::get();
+
+        return view('stage.index', ['data' => $stages]);
+    }
+
+    public function tambah()
+    {
+        $banners = Banner::get();
+
+        return view('stage.form', ['banners' => $banners]);
     }
 }

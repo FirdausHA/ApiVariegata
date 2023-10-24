@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -37,7 +37,7 @@
               <form action="{{ route('register.simpan') }}" method="POST" class="user">
                 @csrf
                 <div class="form-group">
-                  <input name="nama" type="text" class="form-control form-control-user @error('nama')is-invalid @enderror" id="exampleInputName" placeholder="Name">
+                  <input name="nama" type="text" class="form-control form-control-user @error('name')is-invalid @enderror" id="exampleInputName" placeholder="Name">
                   @error('nama')
                     <span class="invalid-feedback">{{ $message }}</span>
                   @enderror
@@ -88,4 +88,4 @@
 
 </body>
 
-</html>
+</html> --}}

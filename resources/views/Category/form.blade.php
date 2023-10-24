@@ -3,7 +3,7 @@
 @section('title', 'Form Category')
 
 @section('contents')
-  <form action="{{ route(isset($category) ? 'category.tambah.update' : 'category.tambah.simpan', $category->id ?? null) }}" method="post">
+  <form action="{{ route(isset($category) ? 'categories.store.update' : 'categories.store', $category->id ?? null) }}" method="post">
     @csrf
     <div class="row">
       <div class="col-12">
