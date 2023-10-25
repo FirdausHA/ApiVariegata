@@ -100,11 +100,13 @@ Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
 Route::put('/products/{id}/update-stock', [ProductController::class, 'updateProductStock']);
 
+Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::get('cart', [CartController::class, 'index']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::delete('delete-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
 Route::put('update-cart/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
+});
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
 Route::get('/hamas', [HamaController::class,'index']);

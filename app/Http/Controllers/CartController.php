@@ -11,7 +11,8 @@ class CartController extends Controller
 {
     public function index()
     {
-        $cartItems = Cart::with('product')->get();
+        $user = Auth::user();
+        $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
         return response()->json($cartItems);
     }
 
@@ -23,30 +24,30 @@ class CartController extends Controller
         ]);
 
         try {
+            $user = Auth::user();
             $product = Product::findOrFail($request->input('product_id'));
 
-            // Periksa apakah stok mencukupi
             if ($product->stock < $request->input('quantity')) {
                 return response()->json(['error' => 'Stok produk tidak mencukupi'], 400);
             }
 
-            // Periksa apakah produk sudah ada dalam keranjang
-            $existingCartItem = Cart::where('product_id', $product->id)->first();
+            $existingCartItem = Cart::where('product_id', $product->id)
+                ->where('user_id', $user->id)
+                ->first();
 
             if ($existingCartItem) {
-                // Jika produk sudah ada dalam keranjang, tambahkan jumlahnya
                 $existingCartItem->quantity += $request->input('quantity');
                 $existingCartItem->save();
             } else {
                 $cartItem = new Cart([
                     'product_id' => $product->id,
                     'quantity' => $request->input('quantity'),
+                    'user_id' => $user->id,
                 ]);
 
                 $cartItem->save();
             }
 
-            // Kurangkan stok produk
             $product->stock -= $request->input('quantity');
             $product->save();
 
@@ -59,9 +60,9 @@ class CartController extends Controller
     public function removeFromCart($cartItemId)
     {
         try {
-            $cartItem = Cart::findOrFail($cartItemId);
+            $user = Auth::user();
+            $cartItem = Cart::where('user_id', $user->id)->findOrFail($cartItemId);
 
-            // Kembalikan stok produk yang dihapus dari keranjang
             $product = Product::find($cartItem->product_id);
             $product->stock += $cartItem->quantity;
             $product->save();
@@ -81,26 +82,23 @@ class CartController extends Controller
         ]);
 
         try {
-            $cartItem = Cart::findOrFail($cartItemId);
+            $user = Auth::user();
+            $cartItem = Cart::where('user_id', $user->id)->findOrFail($cartItemId);
             $originalQuantity = $cartItem->quantity;
 
-            // Mengembalikan stok produk yang diupdate ke stok produk yang asli
             $product = Product::find($cartItem->product_id);
             $product->stock += $originalQuantity;
             $product->save();
 
-            // Update jumlah item dalam keranjang
             $cartItem->quantity = $request->input('quantity');
             $cartItem->save();
 
-            // Kurangkan stok produk sesuai dengan jumlah yang baru
             if ($product->stock >= $request->input('quantity')) {
                 $product->stock -= $request->input('quantity');
                 $product->save();
 
                 return response()->json(['message' => 'Cart item updated successfully']);
             } else {
-                // Jika stok tidak mencukupi, kembalikan stok produk ke jumlah asli
                 $product->stock += $request->input('quantity');
                 $product->save();
 
@@ -113,7 +111,8 @@ class CartController extends Controller
 
     public function calculateTotalPrice()
     {
-        $cartItems = Cart::all();
+        $user = Auth::user();
+        $cartItems = Cart::where('user_id', $user->id)->get();
         $totalPrice = 0;
 
         foreach ($cartItems as $cartItem) {
