@@ -11,7 +11,6 @@ class ReviewProductController extends Controller
     public function index(Request $request)
     {
         $productId = $request->input('product_id');
-
         $reviews = ReviewProduct::where('product_id', $productId)->get();
         return response()->json($reviews);
     }

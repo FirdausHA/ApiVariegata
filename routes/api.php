@@ -14,7 +14,6 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductCrosellController;
 use App\Http\Controllers\ReviewProductController;
 use App\Http\Controllers\KeranjangController;
 
@@ -51,13 +50,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
-
-Route::prefix('productcrosell')->group(function () {
-    Route::get('/', [ProductCrosellController::class, 'index']);
-    Route::post('/', [ProductCrosellController::class, 'store']);
-    Route::put('/{id}', [ProductCrosellController::class, 'update']);
-    Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
-});
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/reviews', [ReviewProductController::class, 'index']);
