@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reviews = ReviewProduct::all();
+        $productId = $request->input('product_id');
+        $reviews = ReviewProduct::where('product_id', $productId)->get();
         return response()->json($reviews);
     }
 
@@ -25,12 +26,14 @@ class ReviewProductController extends Controller
         $request->validate([
             'comment' => 'required|string',
             'rating' => 'required|integer|between:1,5',
+            'product_id' => 'required|integer', // Menambahkan validasi product_id.
         ]);
 
         $review = ReviewProduct::create([
             'comment' => $request->input('comment'),
             'rating' => $request->input('rating'),
-            'user_id' => $user->id, // Tambahkan kolom 'user_id' dengan nilai id pengguna saat ini.
+            'user_id' => $user->id,
+            'product_id' => $request->input('product_id'), // Menambahkan kolom 'product_id'.
         ]);
 
         return response()->json(['message' => 'Review added successfully', 'review' => $review]);

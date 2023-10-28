@@ -14,7 +14,6 @@ use App\Http\Controllers\StageController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductCrosellController;
 use App\Http\Controllers\ReviewProductController;
 use App\Http\Controllers\KeranjangController;
 
@@ -51,13 +50,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware('auth:sanctum')->post('/checkout', [OrderController::class, 'checkout']);
 Route::middleware('auth:sanctum')->post('/callback', [OrderController::class, 'callback']);
 Route::middleware('auth:sanctum')->get('/user-transactions', [OrderController::class, 'userTransactions']);
-
-Route::prefix('productcrosell')->group(function () {
-    Route::get('/', [ProductCrosellController::class, 'index']);
-    Route::post('/', [ProductCrosellController::class, 'store']);
-    Route::put('/{id}', [ProductCrosellController::class, 'update']);
-    Route::delete('/{id}', [ProductCrosellController::class, 'delete']);
-});
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/reviews', [ReviewProductController::class, 'index']);
@@ -100,11 +92,13 @@ Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('products/{id}', [ProductController::class, 'destroy']);
 Route::put('/products/{id}/update-stock', [ProductController::class, 'updateProductStock']);
 
+Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('cart', [CartController::class, 'index']);
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 Route::delete('delete-cart/{cartItemId}', [CartController::class, 'removeFromCart']);
 Route::put('update-cart/{cartItemId}', [CartController::class, 'updateCartItem']);
 Route::get('calculate-total-price', [CartController::class, 'calculateTotalPrice']);
+});
 
 Route::get('/hamas/plants/{plant_id}', [HamaController::class, 'getbyPlant']);
 Route::get('/hamas', [HamaController::class,'index']);
