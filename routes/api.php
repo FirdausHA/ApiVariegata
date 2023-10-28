@@ -60,7 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::get('/keranjang/listdata', [KeranjangController::class, 'listdata']);
 Route::post('/keranjang/tambah', [KeranjangController::class, 'tambahkeranjang']);
-Route::delete('/keranjang/delete/{cartItemId}', [KeranjangController::class, 'Delete']);
+Route::delete('/keranjang/delete/{cartItemId}', [KeranjangController::class, 'DeleteAll']);
 Route::put('/keranjang/update/{cartItemId}', [KeranjangController::class, 'updateCartItem']);
 Route::get('/keranjang/totalprice', [KeranjangController::class, 'calculateTotalPrice']);
 
